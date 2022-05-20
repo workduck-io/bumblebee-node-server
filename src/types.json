@@ -1,0 +1,97 @@
+{
+    "$id": "types",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "definitions": {
+        "BumblebeeErrorType": {
+            "properties": {
+                "errorCode": {
+                    "$ref": "types#/definitions/errorCodes"
+                },
+                "errorObject": {},
+                "message": {
+                    "type": "string"
+                },
+                "metaData": {
+                    "type": "string"
+                },
+                "statusCode": {
+                    "$ref": "types#/definitions/statusCodes"
+                }
+            },
+            "required": [
+                "message"
+            ],
+            "type": "object"
+        },
+        "GenericObjectType": {
+            "additionalProperties": {
+                "$ref": "types#/definitions/GenericType"
+            },
+            "type": "object"
+        },
+        "GenericType": {
+            "anyOf": [
+                {
+                    "$ref": "types#/definitions/GenericObjectType"
+                },
+                {
+                    "items": {
+                        "$ref": "types#/definitions/GenericType"
+                    },
+                    "type": "array"
+                },
+                {
+                    "type": [
+                        "string",
+                        "number",
+                        "boolean"
+                    ]
+                }
+            ]
+        },
+        "GotClientType": {
+            "type": "object"
+        },
+        "GotResponse": {
+            "properties": {
+                "data": {},
+                "status": {
+                    "type": "number"
+                }
+            },
+            "required": [
+                "data",
+                "status"
+            ],
+            "type": "object"
+        },
+        "errorCodes": {
+            "enum": [
+                "AUTH_ERROR",
+                "INPUT_ERROR",
+                "NOT_FOUND",
+                "NO_CONTENT",
+                "UNKNOWN"
+            ],
+            "type": "string"
+        },
+        "statusCodes": {
+            "enum": [
+                200,
+                204,
+                400,
+                401,
+                403,
+                404,
+                408,
+                429,
+                500,
+                502,
+                503,
+                504
+            ],
+            "type": "number"
+        }
+    }
+}
+
