@@ -65,6 +65,25 @@
             ],
             "type": "object"
         },
+        "TwitterLookup": {
+            "properties": {
+                "ids": {
+                    "type": "string"
+                },
+                "tweet.fields": {
+                    "type": "string"
+                },
+                "user.fields": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "ids",
+                "tweet.fields",
+                "user.fields"
+            ],
+            "type": "object"
+        },
         "errorCodes": {
             "enum": [
                 "AUTH_ERROR",
