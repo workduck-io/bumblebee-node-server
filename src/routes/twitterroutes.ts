@@ -7,6 +7,6 @@ export const initializeTwitterRoutes = (
 
   twitterControllerObject._router.get(
     `${urlPath}/:tweetId`,
-    twitterControllerObject.getTweet
+    twitterControllerObject.getAllRepliesInfo
   );
 };

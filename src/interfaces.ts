@@ -1,4 +1,11 @@
-import { GenericObjectType, GenericType } from './interfaces/generics';
+import {
+  GenericObjectType,
+  GenericResponse,
+  GenericThread,
+  GenericType,
+  GenericUser,
+  Provider,
+} from './interfaces/generics';
 import { GotResponse, GotClientType } from './interfaces/gotclient';
 import { BumblebeeErrorType } from './interfaces/bumblebee_error';
 import { errorCodes, statusCodes } from './libs/constants';
@@ -16,4 +23,8 @@ export default class Interfaces implements Definitions {
   GotResponse: GotResponse;
   GotClientType: GotClientType;
   TwitterLookup: TwitterLookup;
+  Provider: Provider;
+  GenericThread: GenericThread;
+  GenericUser: GenericUser;
+  GenericResponse: GenericResponse;
 }

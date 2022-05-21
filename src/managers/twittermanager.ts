@@ -9,29 +9,60 @@ import { TwitterLookup } from '../interfaces/twitter';
 @injectable()
 export class TwitterManager {
   public baseEndpointURL = 'https://api.twitter.com/2/';
-  async getAllTweets(tweetId: string): Promise<GotResponse> {
+  async getTweet(tweetId: string): Promise<GotResponse> {
     try {
+      const token = process.env.BEARER_TOKEN;
       const params: TwitterLookup = {
         ids: tweetId,
         'tweet.fields': 'conversation_id',
       };
       const url = `${this.baseEndpointURL}tweets`;
-      const tweetWithConversationId = (
-        await get(url, process.env.BEARER_TOKEN, params)
-      ).data[0] as any;
+      return await get(url, token, params);
+    } catch (error) {
+      errorlib({
+        message: error.message,
+        errorCode: errorCodes.UNKNOWN,
+        errorObject: error,
+        statusCode: statusCodes.INTERNAL_SERVER_ERROR,
+        metaData: error.message,
+      });
+    }
+  }
 
+  async searchTweets(conversationId: string): Promise<GotResponse> {
+    try {
+      const token = process.env.BEARER_TOKEN;
       const searchTweetUrl = `${this.baseEndpointURL}tweets/search/recent`;
       const allRepliesParams: TwitterLookup = {
         'tweet.fields':
           'conversation_id,in_reply_to_user_id,author_id,created_at',
-        query: `conversation_id:${tweetWithConversationId.conversation_id}`,
+        'user.fields': 'description',
+        query: `conversation_id:${conversationId}`,
       };
 
-      return await get(
-        searchTweetUrl,
-        process.env.BEARER_TOKEN,
-        allRepliesParams
-      );
+      return await get(searchTweetUrl, token, allRepliesParams);
+    } catch (error) {
+      errorlib({
+        message: error.message,
+        errorCode: errorCodes.UNKNOWN,
+        errorObject: error,
+        statusCode: statusCodes.INTERNAL_SERVER_ERROR,
+        metaData: error.message,
+      });
+    }
+  }
+
+  async getUserData(userIds: string): Promise<GotResponse> {
+    try {
+      const token = process.env.BEARER_TOKEN;
+      const params: TwitterLookup = {
+        ids: userIds,
+        'user.fields': 'profile_image_url,username,name,description',
+      };
+
+      const url = `${this.baseEndpointURL}users`;
+      const usersData = await get(url, token, params);
+      return usersData;
     } catch (error) {
       errorlib({
         message: error.message,

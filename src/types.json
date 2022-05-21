@@ -29,6 +29,50 @@
             },
             "type": "object"
         },
+        "GenericResponse": {
+            "properties": {
+                "provider": {
+                    "$ref": "types#/definitions/Provider"
+                },
+                "threads": {
+                    "items": {
+                        "$ref": "types#/definitions/GenericThread"
+                    },
+                    "type": "array"
+                },
+                "userInfo": {
+                    "items": {
+                        "$ref": "types#/definitions/GenericUser"
+                    },
+                    "type": "array"
+                }
+            },
+            "required": [
+                "provider",
+                "threads",
+                "userInfo"
+            ],
+            "type": "object"
+        },
+        "GenericThread": {
+            "properties": {
+                "creadtedAt": {
+                    "type": "string"
+                },
+                "text": {
+                    "type": "string"
+                },
+                "userId": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "creadtedAt",
+                "text",
+                "userId"
+            ],
+            "type": "object"
+        },
         "GenericType": {
             "anyOf": [
                 {
@@ -49,25 +93,53 @@
                 }
             ]
         },
+        "GenericUser": {
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "profileImageUrl": {
+                    "type": "string"
+                },
+                "userName": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "name",
+                "profileImageUrl",
+                "userName"
+            ],
+            "type": "object"
+        },
         "GotClientType": {
             "type": "object"
         },
         "GotResponse": {
             "properties": {
-                "data": {},
-                "status": {
-                    "type": "number"
-                }
+                "data": {}
             },
             "required": [
-                "data",
-                "status"
+                "data"
             ],
             "type": "object"
         },
+        "Provider": {
+            "enum": [
+                "slack",
+                "twitter"
+            ],
+            "type": "string"
+        },
         "TwitterLookup": {
             "properties": {
+                "expansions": {
+                    "type": "string"
+                },
                 "ids": {
+                    "type": "string"
+                },
+                "query": {
                     "type": "string"
                 },
                 "tweet.fields": {
@@ -77,11 +149,6 @@
                     "type": "string"
                 }
             },
-            "required": [
-                "ids",
-                "tweet.fields",
-                "user.fields"
-            ],
             "type": "object"
         },
         "errorCodes": {
