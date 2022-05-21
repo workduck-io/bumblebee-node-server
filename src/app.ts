@@ -6,7 +6,7 @@ import { errorCodes } from './libs/constants';
 import 'dotenv/config';
 import { LogRequest } from './middlewares/logrequest';
 import logger from './libs/logger';
-// import 'reflect-metadata';
+import 'reflect-metadata';
 
 class App {
   public _app: express.Application;

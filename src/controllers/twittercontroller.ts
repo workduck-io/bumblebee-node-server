@@ -18,7 +18,7 @@ class TwitterController {
       const tweetId = request.params.tweetId;
       const tweet = await this._twitterManager.getAllTweets(tweetId);
 
-      response.status(tweet.status).json(tweet.data);
+      response.status(statusCodes.OK).json(tweet.data);
     } catch (error) {
       response
         .status(statusCodes.INTERNAL_SERVER_ERROR)

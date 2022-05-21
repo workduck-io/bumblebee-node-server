@@ -1,6 +1,5 @@
 export interface GotResponse {
   data: unknown;
-  status: number;
 }
 
 export interface GotClientType {
