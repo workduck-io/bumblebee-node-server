@@ -15,7 +15,7 @@ export enum Provider {
 export interface GenericThread {
   userId: string;
   text: string;
-  creadtedAt: string;
+  createdAt: string;
 }
 
 export interface GenericUser {

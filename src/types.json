@@ -56,7 +56,7 @@
         },
         "GenericThread": {
             "properties": {
-                "creadtedAt": {
+                "createdAt": {
                     "type": "string"
                 },
                 "text": {
@@ -67,7 +67,7 @@
                 }
             },
             "required": [
-                "creadtedAt",
+                "createdAt",
                 "text",
                 "userId"
             ],
