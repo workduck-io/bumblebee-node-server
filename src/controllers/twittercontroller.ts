@@ -4,10 +4,7 @@ import container from '../inversify.config';
 import { statusCodes } from '../libs/constants';
 import { initializeTwitterRoutes } from '../routes/twitterroutes';
 import { GenericResponse, Provider } from '../interfaces/generics';
-import {
-  serializedTwitterUserInfo,
-  serializeTwitterReplies,
-} from '../libs/serializer';
+import { serializeTwitterReplies } from '../libs/serializer';
 import { Cache } from '../libs/cache';
 
 class TwitterController {
@@ -57,10 +54,12 @@ class TwitterController {
         );
       }
 
+      const result = [];
+      //   console.log({ tweetReplies });
+
       const genericResponse: GenericResponse = {
         provider: Provider.TWITTER,
-        threads: serializeTwitterReplies(tweetReplies),
-        userInfo: serializedTwitterUserInfo(usersData),
+        threads: serializeTwitterReplies(tweetReplies, usersData),
       };
 
       response.status(statusCodes.OK).json(genericResponse);

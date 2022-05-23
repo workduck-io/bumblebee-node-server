@@ -3,7 +3,6 @@ import {
   GenericResponse,
   GenericThread,
   GenericType,
-  GenericUser,
   Provider,
 } from './interfaces/generics';
 import { GotResponse, GotClientType } from './interfaces/gotclient';
@@ -25,6 +24,5 @@ export default class Interfaces implements Definitions {
   TwitterLookup: TwitterLookup;
   Provider: Provider;
   GenericThread: GenericThread;
-  GenericUser: GenericUser;
   GenericResponse: GenericResponse;
 }

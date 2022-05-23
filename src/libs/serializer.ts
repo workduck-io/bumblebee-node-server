@@ -1,27 +1,23 @@
-import { GenericThread, GenericUser } from '../interfaces/generics';
+import { GenericThread } from '../interfaces/generics';
 
 export const serializeTwitterReplies = (
-  twitterReplies: any[]
+  tweetReplies: any[],
+  usersData: any[]
 ): GenericThread[] => {
   const serializedReplies: GenericThread[] = [];
-  twitterReplies.map(twitterReply => {
-    serializedReplies.push({
-      text: twitterReply.text,
-      createdAt: twitterReply.created_at,
-      userId: twitterReply.author_id,
-    });
-  });
-  return serializedReplies;
-};
 
-export const serializedTwitterUserInfo = (userInfoes: any[]): GenericUser[] => {
-  const serializedUserInfoes: GenericUser[] = [];
-  userInfoes.map(userInfo => {
-    serializedUserInfoes.push({
-      name: userInfo.name,
-      userName: userInfo.username,
-      profileImageUrl: userInfo.profile_image_url,
+  for (let index = 0; index < tweetReplies.length; index++) {
+    const tweetReply = tweetReplies[index];
+    delete tweetReply.id;
+    const userData = usersData[index];
+    delete userData.id;
+    serializedReplies.push({
+      createdAt: tweetReply.created_at,
+      text: tweetReply.text,
+      name: userData.name,
+      profileImageUrl: userData.profile_image_url,
+      userName: userData.username,
     });
-  });
-  return serializedUserInfoes;
+  }
+  return serializedReplies;
 };

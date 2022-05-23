@@ -57,7 +57,7 @@ export class TwitterManager {
       const token = process.env.BEARER_TOKEN;
       const params: TwitterLookup = {
         ids: userIds,
-        'user.fields': 'profile_image_url,username,name,description',
+        'user.fields': 'id,profile_image_url,username,name,description',
       };
 
       const url = `${this.baseEndpointURL}users`;

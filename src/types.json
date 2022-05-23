@@ -39,18 +39,11 @@
                         "$ref": "types#/definitions/GenericThread"
                     },
                     "type": "array"
-                },
-                "userInfo": {
-                    "items": {
-                        "$ref": "types#/definitions/GenericUser"
-                    },
-                    "type": "array"
                 }
             },
             "required": [
                 "provider",
-                "threads",
-                "userInfo"
+                "threads"
             ],
             "type": "object"
         },
@@ -59,17 +52,25 @@
                 "createdAt": {
                     "type": "string"
                 },
+                "name": {
+                    "type": "string"
+                },
+                "profileImageUrl": {
+                    "type": "string"
+                },
                 "text": {
                     "type": "string"
                 },
-                "userId": {
+                "userName": {
                     "type": "string"
                 }
             },
             "required": [
                 "createdAt",
+                "name",
+                "profileImageUrl",
                 "text",
-                "userId"
+                "userName"
             ],
             "type": "object"
         },
@@ -92,25 +93,6 @@
                     ]
                 }
             ]
-        },
-        "GenericUser": {
-            "properties": {
-                "name": {
-                    "type": "string"
-                },
-                "profileImageUrl": {
-                    "type": "string"
-                },
-                "userName": {
-                    "type": "string"
-                }
-            },
-            "required": [
-                "name",
-                "profileImageUrl",
-                "userName"
-            ],
-            "type": "object"
         },
         "GotClientType": {
             "type": "object"

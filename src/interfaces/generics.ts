@@ -13,12 +13,8 @@ export enum Provider {
 }
 
 export interface GenericThread {
-  userId: string;
   text: string;
   createdAt: string;
-}
-
-export interface GenericUser {
   userName: string;
   name: string;
   profileImageUrl: string;
@@ -27,5 +23,4 @@ export interface GenericUser {
 export interface GenericResponse {
   provider: Provider;
   threads: GenericThread[];
-  userInfo: GenericUser[];
 }
