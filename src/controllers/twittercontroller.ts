@@ -54,9 +54,6 @@ class TwitterController {
         );
       }
 
-      const result = [];
-      //   console.log({ tweetReplies });
-
       const genericResponse: GenericResponse = {
         provider: Provider.TWITTER,
         threads: serializeTwitterReplies(tweetReplies, usersData),
