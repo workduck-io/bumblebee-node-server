@@ -1,0 +1,12 @@
+{
+  "name": "bumblebee-node-server",
+  "repository": "https://github.com/workduck-io/bumblebee-node-server",
+  "logo": "https://node-js-sample.herokuapp.com/node.png",
+  "keywords": ["node", "express", "twitter"],
+  "env": {
+    "BEARER_TOKEN": {
+      "description": "A secret key for authorizing the twitter API",
+      "value ": "enter your twitter bearer token here"
+    }
+  }
+}
