@@ -5,7 +5,7 @@ export const initializeTwitterRoutes = (
 ): void => {
   const urlPath = '/twitter';
 
-  twitterControllerObject._router.get(
+  twitterControllerObject.router.get(
     `${urlPath}/:tweetId`,
     twitterControllerObject.getAllRepliesInfo
   );

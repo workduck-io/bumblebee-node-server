@@ -37,7 +37,7 @@ class App {
 
   private initializeControllers(controllers) {
     controllers.forEach(controller => {
-      this._app.use('/api/v1/', controller._router);
+      this._app.use('/api/v1/', controller.router);
     });
     this._app.use((req, res, next) => {
       res.status(404);

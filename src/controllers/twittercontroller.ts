@@ -8,11 +8,14 @@ import {
   serializedTwitterUserInfo,
   serializeTwitterReplies,
 } from '../libs/serializer';
+import { Cache } from '../libs/cache';
 
 class TwitterController {
-  public _twitterManager: TwitterManager =
+  private _twitterManager: TwitterManager =
     container.get<TwitterManager>(TwitterManager);
-  public _router = express.Router();
+  private _cache: Cache = container.get<Cache>(Cache);
+  private _twitterUserIdCacheLabel = 'TWITTERUSERID';
+  public router = express.Router();
 
   constructor() {
     initializeTwitterRoutes(this);
@@ -35,9 +38,24 @@ class TwitterController {
       // craft the payload of all userIds from the tweet replies
       tweetReplies.map(tweetReply => userIds.push(tweetReply.author_id));
 
-      const usersData = (
-        await this._twitterManager.getUserData(userIds.toString())
-      ).data as any;
+      let usersData: any[];
+
+      const cachedUserData = this._cache.get(
+        userIds.toString(),
+        this._twitterUserIdCacheLabel
+      );
+
+      if (cachedUserData) {
+        usersData = cachedUserData;
+      } else {
+        usersData = (await this._twitterManager.getUserData(userIds.toString()))
+          .data as any[];
+        this._cache.set(
+          userIds.toString(),
+          this._twitterUserIdCacheLabel,
+          usersData
+        );
+      }
 
       const genericResponse: GenericResponse = {
         provider: Provider.TWITTER,
