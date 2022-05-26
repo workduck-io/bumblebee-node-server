@@ -22,7 +22,7 @@ const gotConfig: OptionsOfTextResponseBody = {
   },
 };
 
-export const get = async (
+export const getFromTwitter = async (
   url: string,
   authToken: string,
   searchParams?: any
@@ -37,4 +37,20 @@ export const get = async (
       ...gotConfig,
     })
     .json();
+};
+
+export const getFromSlack = async (
+  url: string,
+  authToken: string,
+  searchParams?: any
+): Promise<GotResponse> => {
+  await got.get(url, {
+    headers: {
+      authorization: `Bearer ${authToken}`,
+    },
+    ...(searchParams && { searchParams }),
+    ...gotConfig,
+  });
+  gotResponse.data = JSON.parse(gotResponse.data as any);
+  return gotResponse;
 };

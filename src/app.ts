@@ -7,6 +7,7 @@ import 'dotenv/config';
 import { LogRequest } from './middlewares/logrequest';
 import logger from './libs/logger';
 import 'reflect-metadata';
+import SlackController from './controllers/slackcontroller';
 
 class App {
   public _app: express.Application;
@@ -52,7 +53,7 @@ class App {
   }
 }
 
-const application = new App([new TwitterController()]);
+const application = new App([new TwitterController(), new SlackController()]);
 application.build();
 application._app.listen(application._port, () => {
   return console.log(

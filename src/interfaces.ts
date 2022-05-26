@@ -10,6 +10,10 @@ import { BumblebeeErrorType } from './interfaces/bumblebee_error';
 import { errorCodes, statusCodes } from './libs/constants';
 import schema from './types.json';
 import { TwitterLookup } from './interfaces/twitter';
+import {
+  SlackConversationHistoryParams,
+  SlackUserInfoParams,
+} from './interfaces/slack';
 
 type SchemaType = typeof schema.definitions;
 type Definitions = { [x in keyof SchemaType]: unknown };
@@ -25,4 +29,6 @@ export default class Interfaces implements Definitions {
   Provider: Provider;
   GenericThread: GenericThread;
   GenericResponse: GenericResponse;
+  SlackConversationHistoryParams: SlackConversationHistoryParams;
+  SlackUserInfoParams: SlackUserInfoParams;
 }

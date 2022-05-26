@@ -5,9 +5,9 @@ import { Transformer } from './transformer';
 
 @injectable()
 export class Cache {
-  private _ttl = 1200;
-  private _refreshPeriod = 1205;
-  private _maxKeys = 50;
+  private _ttl = 120;
+  private _refreshPeriod = 125;
+  private _maxKeys = 100;
   private _cache;
   private _transformer: Transformer = container.get<Transformer>(Transformer);
 

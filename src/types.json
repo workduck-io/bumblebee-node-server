@@ -113,6 +113,34 @@
             ],
             "type": "string"
         },
+        "SlackConversationHistoryParams": {
+            "properties": {
+                "channel": {
+                    "type": "string"
+                },
+                "inclusive": {
+                    "type": "boolean"
+                },
+                "limit": {
+                    "type": "number"
+                }
+            },
+            "required": [
+                "channel"
+            ],
+            "type": "object"
+        },
+        "SlackUserInfoParams": {
+            "properties": {
+                "user": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "user"
+            ],
+            "type": "object"
+        },
         "TwitterLookup": {
             "properties": {
                 "expansions": {
