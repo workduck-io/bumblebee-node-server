@@ -58,6 +58,12 @@
                 "profileImageUrl": {
                     "type": "string"
                 },
+                "replies": {
+                    "items": {
+                        "$ref": "types#/definitions/GenericThread"
+                    },
+                    "type": "array"
+                },
                 "text": {
                     "type": "string"
                 },
@@ -127,6 +133,21 @@
             },
             "required": [
                 "channel"
+            ],
+            "type": "object"
+        },
+        "SlackRepliesParams": {
+            "properties": {
+                "channel": {
+                    "type": "string"
+                },
+                "ts": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "channel",
+                "ts"
             ],
             "type": "object"
         },

@@ -9,15 +9,15 @@ import { TwitterLookup } from '../interfaces/twitter';
 @injectable()
 export class TwitterManager {
   public baseEndpointURL = 'https://api.twitter.com/2/';
+  private token = process.env.TWITTER_BEARER_TOKEN;
   async getTweet(tweetId: string): Promise<GotResponse> {
     try {
-      const token = process.env.TWITTER_BEARER_TOKEN;
       const params: TwitterLookup = {
         ids: tweetId,
         'tweet.fields': 'conversation_id',
       };
       const url = `${this.baseEndpointURL}tweets`;
-      return await getFromTwitter(url, token, params);
+      return await getFromTwitter(url, this.token, params);
     } catch (error) {
       errorlib({
         message: error.message,
@@ -31,7 +31,6 @@ export class TwitterManager {
 
   async searchTweets(conversationId: string): Promise<GotResponse> {
     try {
-      const token = process.env.TWITTER_BEARER_TOKEN;
       const searchTweetUrl = `${this.baseEndpointURL}tweets/search/recent`;
       const allRepliesParams: TwitterLookup = {
         'tweet.fields':
@@ -40,7 +39,7 @@ export class TwitterManager {
         query: `conversation_id:${conversationId}`,
       };
 
-      return await getFromTwitter(searchTweetUrl, token, allRepliesParams);
+      return await getFromTwitter(searchTweetUrl, this.token, allRepliesParams);
     } catch (error) {
       errorlib({
         message: error.message,
@@ -54,14 +53,13 @@ export class TwitterManager {
 
   async getUserData(userIds: string): Promise<GotResponse> {
     try {
-      const token = process.env.TWITTER_BEARER_TOKEN;
       const params: TwitterLookup = {
         ids: userIds,
         'user.fields': 'id,profile_image_url,username,name,description',
       };
 
       const url = `${this.baseEndpointURL}users`;
-      const usersData = await getFromTwitter(url, token, params);
+      const usersData = await getFromTwitter(url, this.token, params);
       return usersData;
     } catch (error) {
       errorlib({

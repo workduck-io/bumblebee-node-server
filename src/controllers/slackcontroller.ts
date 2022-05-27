@@ -65,12 +65,25 @@ class SlackController {
             userInfo
           );
         }
+        const messageReplies: any[] = (
+          (await this._slackManager.getReplies(channelId, message.ts))
+            .data as any
+        ).messages.slice(1);
+
+        const threadReplies: GenericThread[] = [];
+        // append replies to the response
+        messageReplies &&
+          threadReplies.push(
+            ...(await this.fetchMessageReplies(messageReplies))
+          );
+
         threadMessages.push({
           createdAt: new Date(message.ts * 1000).toISOString(),
           name: userInfo.real_name,
           userName: userInfo.name,
           profileImageUrl: userInfo.profile.image_original,
           text: message.text,
+          replies: threadReplies,
         });
       }
 
@@ -85,6 +98,41 @@ class SlackController {
         .status(statusCodes.INTERNAL_SERVER_ERROR)
         .json({ message: error.toString() });
     }
+  };
+
+  fetchMessageReplies = async (messageReplies: any[]): Promise<any[]> => {
+    const threadReplies: GenericThread[] = [];
+    messageReplies.map(async reply => {
+      const replyUserId = reply.user;
+      const cachedReplyUserData = this._cache.get(
+        replyUserId.toString(),
+        this._slackUserIdCacheLabel
+      );
+
+      let replyUserInfo: any;
+
+      if (cachedReplyUserData) {
+        replyUserInfo = cachedReplyUserData;
+      } else {
+        replyUserInfo = (
+          (await this._slackManager.getUserInfo(replyUserId)).data as any
+        ).user;
+        this._cache.set(
+          replyUserId.toString(),
+          this._slackUserIdCacheLabel,
+          replyUserInfo
+        );
+      }
+      threadReplies.push({
+        text: reply.text,
+        createdAt: new Date(reply.ts * 1000).toISOString(),
+        name: replyUserInfo.real_name,
+        userName: replyUserInfo.name,
+        profileImageUrl: replyUserInfo.profile.image_original,
+      });
+    });
+
+    return threadReplies;
   };
 }
 

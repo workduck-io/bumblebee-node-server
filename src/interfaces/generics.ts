@@ -18,6 +18,7 @@ export interface GenericThread {
   userName: string;
   name: string;
   profileImageUrl: string;
+  replies?: GenericThread[];
 }
 
 export interface GenericResponse {

@@ -12,6 +12,7 @@ import schema from './types.json';
 import { TwitterLookup } from './interfaces/twitter';
 import {
   SlackConversationHistoryParams,
+  SlackRepliesParams,
   SlackUserInfoParams,
 } from './interfaces/slack';
 
@@ -31,4 +32,5 @@ export default class Interfaces implements Definitions {
   GenericResponse: GenericResponse;
   SlackConversationHistoryParams: SlackConversationHistoryParams;
   SlackUserInfoParams: SlackUserInfoParams;
+  SlackRepliesParams: SlackRepliesParams;
 }
