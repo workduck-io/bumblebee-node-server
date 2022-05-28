@@ -10,24 +10,6 @@ import { TwitterLookup } from '../interfaces/twitter';
 export class TwitterManager {
   public baseEndpointURL = 'https://api.twitter.com/2/';
   private token = process.env.TWITTER_BEARER_TOKEN;
-  async getTweet(tweetId: string): Promise<GotResponse> {
-    try {
-      const params: TwitterLookup = {
-        ids: tweetId,
-        'tweet.fields': 'conversation_id',
-      };
-      const url = `${this.baseEndpointURL}tweets`;
-      return await getFromTwitter(url, this.token, params);
-    } catch (error) {
-      errorlib({
-        message: error.message,
-        errorCode: errorCodes.UNKNOWN,
-        errorObject: error,
-        statusCode: statusCodes.INTERNAL_SERVER_ERROR,
-        metaData: error.message,
-      });
-    }
-  }
 
   async searchTweets(conversationId: string): Promise<GotResponse> {
     try {

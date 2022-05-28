@@ -12,6 +12,8 @@ class TwitterController {
     container.get<TwitterManager>(TwitterManager);
   private _cache: Cache = container.get<Cache>(Cache);
   private _twitterUserIdCacheLabel = 'TWITTERUSERID';
+  private HARD_FETCH_USER_INFO = true;
+
   public router = express.Router();
 
   constructor() {
@@ -24,34 +26,50 @@ class TwitterController {
   ): Promise<void> => {
     try {
       const tweetId = request.params.tweetId;
-      const tweet = (await this._twitterManager.getTweet(tweetId))
-        .data[0] as any;
 
-      const tweetReplies = (
-        await this._twitterManager.searchTweets(tweet.conversation_id)
-      ).data as any;
+      const tweetReplies = (await this._twitterManager.searchTweets(tweetId))
+        .data as any;
 
       const userIds: string[] = [];
       // craft the payload of all userIds from the tweet replies
       tweetReplies.map(tweetReply => userIds.push(tweetReply.author_id));
 
-      let usersData: any[];
+      const usersData: any[] = [];
 
-      const cachedUserData = this._cache.get(
-        userIds.toString(),
-        this._twitterUserIdCacheLabel
-      );
-
-      if (cachedUserData) {
-        usersData = cachedUserData;
-      } else {
-        usersData = (await this._twitterManager.getUserData(userIds.toString()))
-          .data as any[];
-        this._cache.set(
-          userIds.toString(),
-          this._twitterUserIdCacheLabel,
-          usersData
+      // hard fetch all the users info as a batch for the first time
+      if (this.HARD_FETCH_USER_INFO) {
+        usersData.push(
+          ...((await this._twitterManager.getUserData(userIds.toString()))
+            .data as any[])
         );
+        // update the cache
+        this.addUserDataToCache(userIds, usersData);
+        // turn off the hard fetch for the subsequent requests
+        this.HARD_FETCH_USER_INFO = false;
+      }
+      // soft fetch from the cache stored from the previous requests
+      else {
+        const cacheMissedUserIds: any[] = [];
+        for (let index = 0; index < userIds.length; index++) {
+          const cachedUserData = this._cache.get(
+            userIds[index],
+            this._twitterUserIdCacheLabel
+          );
+          // cache hit, so fetch it
+          if (cachedUserData) usersData.push(cachedUserData);
+          else cacheMissedUserIds.push(userIds[index]);
+        }
+
+        // hard fetch the cache missed items
+        if (cacheMissedUserIds.length) {
+          const cacheMissedUsers = (
+            await this._twitterManager.getUserData(
+              cacheMissedUserIds.toString()
+            )
+          ).data as any[];
+          usersData.push(...cacheMissedUsers);
+          this.addUserDataToCache(cacheMissedUserIds, cacheMissedUsers);
+        }
       }
 
       const genericResponse: GenericResponse = {
@@ -64,6 +82,16 @@ class TwitterController {
       response
         .status(statusCodes.INTERNAL_SERVER_ERROR)
         .json({ message: error.toString() });
+    }
+  };
+
+  private addUserDataToCache = (userIds: string[], usersData: any[]) => {
+    for (let index = 0; index < usersData.length; index++) {
+      this._cache.set(
+        userIds[index],
+        this._twitterUserIdCacheLabel,
+        usersData[index]
+      );
     }
   };
 }
