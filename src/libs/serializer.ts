@@ -2,22 +2,56 @@ import { GenericThread } from '../interfaces/generics';
 
 export const serializeTwitterReplies = (
   tweetReplies: any[],
-  usersData: any[]
+  usersData: any[],
+  tweetId: string
 ): GenericThread[] => {
-  const serializedReplies: GenericThread[] = [];
+  const serializedTweets: GenericThread[] = [];
 
   for (let index = 0; index < tweetReplies.length; index++) {
     const tweetReply = tweetReplies[index];
-    delete tweetReply.id;
-    const userData = usersData[index];
-    delete userData.id;
-    serializedReplies.push({
+    let userDataDict: Record<string, any> = {};
+
+    usersData.map(user => {
+      userDataDict[user.id] = user;
+    });
+
+    serializedTweets.push({
       createdAt: tweetReply.created_at,
       text: tweetReply.text,
-      name: userData.name,
-      profileImageUrl: userData.profile_image_url,
-      userName: userData.username,
+      userInfo: {
+        name: userDataDict[tweetReply.author_id].name,
+        profileImageUrl: userDataDict[tweetReply.author_id].profile_image_url,
+        userName: userDataDict[tweetReply.author_id].username,
+      },
+      ...(tweetReply.replies && {
+        replies: serializeReplies(tweetReply.replies, userDataDict),
+      }),
+      ...(tweetReply.tweetUrl && {
+        tweetURL: tweetReply.tweetUrl,
+      }),
     });
   }
-  return serializedReplies;
+  return serializedTweets;
+};
+
+const serializeReplies = (
+  replies: any[],
+  usersDataDict: Record<string, any>
+): GenericThread[] => {
+  const serializedTweetsCollection: GenericThread[] = [];
+
+  for (let index = 0; index < replies.length; index++) {
+    const tweetReply = replies[index];
+
+    serializedTweetsCollection.push({
+      createdAt: tweetReply.created_at,
+      text: tweetReply.text,
+      userInfo: {
+        name: usersDataDict[tweetReply.author_id].name,
+        profileImageUrl: usersDataDict[tweetReply.author_id].profile_image_url,
+        userName: usersDataDict[tweetReply.author_id].username,
+      },
+    });
+  }
+  return serializedTweetsCollection;
 };

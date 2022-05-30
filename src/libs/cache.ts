@@ -27,4 +27,7 @@ export class Cache {
   get(key: string, entity: string) {
     return this._cache.get(this._transformer.encodeCacheKey(entity, key));
   }
+  has(key: string, entity: string) {
+    return this._cache.has(this._transformer.encodeCacheKey(entity, key));
+  }
 }

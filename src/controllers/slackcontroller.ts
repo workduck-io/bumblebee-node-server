@@ -79,9 +79,11 @@ class SlackController {
 
         threadMessages.push({
           createdAt: new Date(message.ts * 1000).toISOString(),
-          name: userInfo.real_name,
-          userName: userInfo.name,
-          profileImageUrl: userInfo.profile.image_original,
+          userInfo: {
+            name: userInfo.real_name,
+            userName: userInfo.name,
+            profileImageUrl: userInfo.profile.image_original,
+          },
           text: message.text,
           replies: threadReplies,
         });
@@ -126,9 +128,11 @@ class SlackController {
       threadReplies.push({
         text: reply.text,
         createdAt: new Date(reply.ts * 1000).toISOString(),
-        name: replyUserInfo.real_name,
-        userName: replyUserInfo.name,
-        profileImageUrl: replyUserInfo.profile.image_original,
+        userInfo: {
+          name: replyUserInfo.real_name,
+          userName: replyUserInfo.name,
+          profileImageUrl: replyUserInfo.profile.image_original,
+        },
       });
     });
 

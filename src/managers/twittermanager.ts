@@ -16,7 +16,7 @@ export class TwitterManager {
       const searchTweetUrl = `${this.baseEndpointURL}tweets/search/recent`;
       const allRepliesParams: TwitterLookup = {
         'tweet.fields':
-          'conversation_id,in_reply_to_user_id,author_id,created_at',
+          'conversation_id,in_reply_to_user_id,author_id,created_at,referenced_tweets',
         'user.fields': 'description',
         query: `conversation_id:${conversationId}`,
       };

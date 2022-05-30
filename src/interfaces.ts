@@ -4,6 +4,7 @@ import {
   GenericThread,
   GenericType,
   Provider,
+  UserInfo,
 } from './interfaces/generics';
 import { GotResponse, GotClientType } from './interfaces/gotclient';
 import { BumblebeeErrorType } from './interfaces/bumblebee_error';
@@ -33,4 +34,5 @@ export default class Interfaces implements Definitions {
   SlackConversationHistoryParams: SlackConversationHistoryParams;
   SlackUserInfoParams: SlackUserInfoParams;
   SlackRepliesParams: SlackRepliesParams;
+  UserInfo: UserInfo;
 }

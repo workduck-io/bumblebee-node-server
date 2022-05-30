@@ -6,13 +6,13 @@ import { initializeTwitterRoutes } from '../routes/twitterroutes';
 import { GenericResponse, Provider } from '../interfaces/generics';
 import { serializeTwitterReplies } from '../libs/serializer';
 import { Cache } from '../libs/cache';
+import _ from 'lodash';
 
 class TwitterController {
   private _twitterManager: TwitterManager =
     container.get<TwitterManager>(TwitterManager);
   private _cache: Cache = container.get<Cache>(Cache);
   private _twitterUserIdCacheLabel = 'TWITTERUSERID';
-  private HARD_FETCH_USER_INFO = true;
 
   public router = express.Router();
 
@@ -31,50 +31,46 @@ class TwitterController {
         .data as any;
 
       const userIds: string[] = [];
+
+      const referenceTweetDict: Record<string, any[]> = {};
+      const tweetDict: Record<string, any> = {};
+
       // craft the payload of all userIds from the tweet replies
-      tweetReplies.map(tweetReply => userIds.push(tweetReply.author_id));
+      tweetReplies.map(tweetReply => {
+        tweetDict[tweetReply.id] = tweetReply;
+
+        if (referenceTweetDict[tweetReply.referenced_tweets[0].id])
+          referenceTweetDict[tweetReply.referenced_tweets[0].id].push(
+            tweetReply
+          );
+        else {
+          referenceTweetDict[tweetReply.referenced_tweets[0].id] = [];
+          referenceTweetDict[tweetReply.referenced_tweets[0].id].push(
+            tweetReply
+          );
+        }
+        userIds.push(tweetReply.author_id);
+
+        if (tweetReply.in_reply_to_user_id)
+          userIds.push(tweetReply.in_reply_to_user_id);
+      });
+
+      const parsedTweets: any[] = [];
+      for (const key of Object.keys(referenceTweetDict)) {
+        parsedTweets.push(...this.parseTweets(key, referenceTweetDict));
+      }
+
+      this.checkForMissingTweets(parsedTweets, tweetId);
+
+      // console.log(JSON.stringify({ parsedTweets }, null, 4));
 
       const usersData: any[] = [];
 
-      // hard fetch all the users info as a batch for the first time
-      if (this.HARD_FETCH_USER_INFO) {
-        usersData.push(
-          ...((await this._twitterManager.getUserData(userIds.toString()))
-            .data as any[])
-        );
-        // update the cache
-        this.addUserDataToCache(userIds, usersData);
-        // turn off the hard fetch for the subsequent requests
-        this.HARD_FETCH_USER_INFO = false;
-      }
-      // soft fetch from the cache stored from the previous requests
-      else {
-        const cacheMissedUserIds: any[] = [];
-        for (let index = 0; index < userIds.length; index++) {
-          const cachedUserData = this._cache.get(
-            userIds[index],
-            this._twitterUserIdCacheLabel
-          );
-          // cache hit, so fetch it
-          if (cachedUserData) usersData.push(cachedUserData);
-          else cacheMissedUserIds.push(userIds[index]);
-        }
-
-        // hard fetch the cache missed items
-        if (cacheMissedUserIds.length) {
-          const cacheMissedUsers = (
-            await this._twitterManager.getUserData(
-              cacheMissedUserIds.toString()
-            )
-          ).data as any[];
-          usersData.push(...cacheMissedUsers);
-          this.addUserDataToCache(cacheMissedUserIds, cacheMissedUsers);
-        }
-      }
+      usersData.push(...(await this.handleUserCacheFetch(userIds, usersData)));
 
       const genericResponse: GenericResponse = {
         provider: Provider.TWITTER,
-        threads: serializeTwitterReplies(tweetReplies, usersData),
+        threads: serializeTwitterReplies(parsedTweets, usersData, tweetId),
       };
 
       response.status(statusCodes.OK).json(genericResponse);
@@ -85,13 +81,83 @@ class TwitterController {
     }
   };
 
+  private parseTweets = (tweetId: string, tweetDict: Record<string, any[]>) => {
+    const result: any[] = [];
+
+    const tweets = tweetDict[tweetId];
+
+    for (const tweet of tweets) {
+      const tweetClone = _.cloneDeep(tweet);
+      if (tweetDict[tweet.id]) tweetClone.replies = tweetDict[tweet.id];
+
+      result.push(tweetClone);
+    }
+
+    return result;
+  };
+
+  private checkForMissingTweets = (parsedTweets: any[], tweetId: string) => {
+    const missingTweets: string[] = [];
+
+    for (const parsedTweet of parsedTweets) {
+      let isPresent = false;
+      for (const parsedTweet_2nd_instance of parsedTweets)
+        if (
+          parsedTweet.referenced_tweets[0].id === parsedTweet_2nd_instance.id &&
+          parsedTweet.referenced_tweets[0].id !== tweetId
+        )
+          isPresent = true;
+
+      if (!isPresent) missingTweets.push(parsedTweet.id);
+    }
+
+    for (const missingTweet of missingTweets) {
+      for (const parsedTweet of parsedTweets) {
+        if (
+          missingTweet === parsedTweet.id &&
+          parsedTweet.referenced_tweets[0].id !== tweetId
+        )
+          parsedTweet.tweetUrl = `https://twitter.com/anyUser/status/${parsedTweet.referenced_tweets[0].id}`;
+      }
+    }
+  };
+
+  private handleUserCacheFetch = async (
+    userIds: string[],
+    usersData: any[]
+  ) => {
+    const cacheMissedUserIds: any[] = [];
+
+    for (let index = 0; index < userIds.length; index++) {
+      const cachedUserData = this._cache.get(
+        userIds[index],
+        this._twitterUserIdCacheLabel
+      );
+      // cache hit, so fetch it
+      if (cachedUserData) usersData.push(cachedUserData);
+      else cacheMissedUserIds.push(userIds[index]);
+    }
+
+    // hard fetch the cache missed items
+    if (cacheMissedUserIds.length) {
+      const cacheMissedUsers = (
+        await this._twitterManager.getUserData(cacheMissedUserIds.toString())
+      ).data as any[];
+      usersData.push(...cacheMissedUsers);
+      this.addUserDataToCache(cacheMissedUserIds, cacheMissedUsers);
+    }
+
+    return usersData;
+  };
+
   private addUserDataToCache = (userIds: string[], usersData: any[]) => {
     for (let index = 0; index < usersData.length; index++) {
-      this._cache.set(
-        userIds[index],
-        this._twitterUserIdCacheLabel,
-        usersData[index]
-      );
+      if (!this._cache.has(userIds[index], this._twitterUserIdCacheLabel))
+        this._cache.set(
+          userIds[index],
+          this._twitterUserIdCacheLabel,
+          usersData[index]
+        );
     }
   };
 }

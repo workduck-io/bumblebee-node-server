@@ -15,10 +15,15 @@ export enum Provider {
 export interface GenericThread {
   text: string;
   createdAt: string;
+  userInfo: UserInfo;
+  replies?: GenericThread[];
+  tweetURL?: string;
+}
+
+export interface UserInfo {
   userName: string;
   name: string;
   profileImageUrl: string;
-  replies?: GenericThread[];
 }
 
 export interface GenericResponse {
