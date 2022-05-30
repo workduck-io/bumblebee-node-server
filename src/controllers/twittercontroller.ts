@@ -62,8 +62,6 @@ class TwitterController {
 
       this.checkForMissingTweets(parsedTweets, tweetId);
 
-      // console.log(JSON.stringify({ parsedTweets }, null, 4));
-
       const usersData: any[] = [];
 
       usersData.push(...(await this.handleUserCacheFetch(userIds, usersData)));
