@@ -52,6 +52,9 @@
                 "createdAt": {
                     "type": "string"
                 },
+                "id": {
+                    "type": "string"
+                },
                 "replies": {
                     "items": {
                         "$ref": "types#/definitions/GenericThread"
@@ -109,6 +112,7 @@
         },
         "Provider": {
             "enum": [
+                "bumblebee",
                 "slack",
                 "twitter"
             ],

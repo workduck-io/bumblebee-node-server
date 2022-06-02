@@ -4,6 +4,7 @@ import { statusCodes } from '../libs/constants';
 import container from '../inversify.config';
 import { RequestParser } from '../libs/requestparser';
 import { TestimonialRepository as Repository } from '../repository/testimonialrepository';
+import { serializeTestimonials } from '../libs/serializer';
 
 class TestimonialController {
   public router = express.Router();
@@ -73,8 +74,11 @@ class TestimonialController {
         response
           .status(statusCodes.RESOURCE_NOT_FOUND)
           .json({ message: 'Item does not exist' });
-
-      response.status(statusCodes.OK).send(testimonial);
+      else {
+        response
+          .status(statusCodes.OK)
+          .send(serializeTestimonials([testimonial]));
+      }
     } catch (error) {
       response
         .status(statusCodes.INTERNAL_SERVER_ERROR)
@@ -86,9 +90,10 @@ class TestimonialController {
     response: Response
   ): Promise<void> => {
     try {
-      const testimonials = await this._testimonialRepository.getAll();
+      const testimonials =
+        (await this._testimonialRepository.getAll()) as any[];
 
-      response.status(statusCodes.OK).send(testimonials);
+      response.status(statusCodes.OK).send(serializeTestimonials(testimonials));
     } catch (error) {
       response
         .status(statusCodes.INTERNAL_SERVER_ERROR)

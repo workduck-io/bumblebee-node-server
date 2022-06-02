@@ -1,4 +1,8 @@
-import { GenericThread } from '../interfaces/generics';
+import {
+  GenericResponse,
+  GenericThread,
+  Provider,
+} from '../interfaces/generics';
 
 export const serializeTwitterReplies = (
   tweetReplies: any[],
@@ -54,4 +58,25 @@ const serializeReplies = (
     });
   }
   return serializedTweetsCollection;
+};
+
+export const serializeTestimonials = (testimonials: any[]): GenericResponse => {
+  const serializedTestimonials: GenericResponse = {
+    provider: Provider.BUMBLEBEE,
+    threads: [],
+  };
+
+  testimonials.map(testimonial => {
+    serializedTestimonials.threads.push({
+      id: testimonial.id,
+      createdAt: testimonial.created_at,
+      text: testimonial.text,
+      userInfo: {
+        name: testimonial.name,
+        profileImageUrl: testimonial.profile_image_url,
+      },
+    });
+  });
+
+  return serializedTestimonials;
 };

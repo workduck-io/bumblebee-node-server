@@ -10,9 +10,11 @@ export type GenericObjectType = { [x: string]: GenericType };
 export enum Provider {
   SLACK = 'slack',
   TWITTER = 'twitter',
+  BUMBLEBEE = 'bumblebee',
 }
 
 export interface GenericThread {
+  id?: string;
   text: string;
   createdAt: string;
   userInfo: UserInfo;
