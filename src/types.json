@@ -52,12 +52,6 @@
                 "createdAt": {
                     "type": "string"
                 },
-                "name": {
-                    "type": "string"
-                },
-                "profileImageUrl": {
-                    "type": "string"
-                },
                 "replies": {
                     "items": {
                         "$ref": "types#/definitions/GenericThread"
@@ -67,16 +61,17 @@
                 "text": {
                     "type": "string"
                 },
-                "userName": {
+                "tweetURL": {
                     "type": "string"
+                },
+                "userInfo": {
+                    "$ref": "types#/definitions/UserInfo"
                 }
             },
             "required": [
                 "createdAt",
-                "name",
-                "profileImageUrl",
                 "text",
-                "userName"
+                "userInfo"
             ],
             "type": "object"
         },
@@ -141,6 +136,12 @@
                 "channel": {
                     "type": "string"
                 },
+                "inclusive": {
+                    "type": "boolean"
+                },
+                "limit": {
+                    "type": "number"
+                },
                 "ts": {
                     "type": "string"
                 }
@@ -162,6 +163,32 @@
             ],
             "type": "object"
         },
+        "TestimonialRepository": {
+            "properties": {
+                "createdAt": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "profileImageUrl": {
+                    "type": "string"
+                },
+                "text": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "createdAt",
+                "name",
+                "profileImageUrl",
+                "text"
+            ],
+            "type": "object"
+        },
         "TwitterLookup": {
             "properties": {
                 "expansions": {
@@ -180,6 +207,24 @@
                     "type": "string"
                 }
             },
+            "type": "object"
+        },
+        "UserInfo": {
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "profileImageUrl": {
+                    "type": "string"
+                },
+                "userName": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "name",
+                "profileImageUrl"
+            ],
             "type": "object"
         },
         "errorCodes": {

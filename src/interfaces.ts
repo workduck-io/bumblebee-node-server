@@ -16,6 +16,7 @@ import {
   SlackRepliesParams,
   SlackUserInfoParams,
 } from './interfaces/slack';
+import { TestimonialRepository } from './interfaces/repository';
 
 type SchemaType = typeof schema.definitions;
 type Definitions = { [x in keyof SchemaType]: unknown };
@@ -35,4 +36,5 @@ export default class Interfaces implements Definitions {
   SlackUserInfoParams: SlackUserInfoParams;
   SlackRepliesParams: SlackRepliesParams;
   UserInfo: UserInfo;
+  TestimonialRepository: TestimonialRepository;
 }

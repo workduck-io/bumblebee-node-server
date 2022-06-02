@@ -8,11 +8,18 @@ import { LogRequest } from './middlewares/logrequest';
 import logger from './libs/logger';
 import 'reflect-metadata';
 import SlackController from './controllers/slackcontroller';
+import ViewController from './controllers/viewcontroller';
+import TestimonialController from './controllers/testimonialcontroller';
+import { TestimonialRepository as Repository } from './repository/testimonialrepository';
+import container from './inversify.config';
 
 class App {
   public _app: express.Application;
   public _port: number;
   private readonly _controllers: unknown;
+
+  private _testimonialRepository: Repository =
+    container.get<Repository>(Repository);
 
   constructor(controllers) {
     this._port = parseInt(process.env.PORT) || 5050;
@@ -24,6 +31,7 @@ class App {
     this.initializeMiddlewares();
     this.initializeControllers(this._controllers);
     this.initializeErrorHandlers();
+    this.initializeDB();
   }
 
   private initializeMiddlewares() {
@@ -36,9 +44,15 @@ class App {
     this._app.use(jsonErrorHandler);
   }
 
+  private initializeDB() {
+    this._testimonialRepository.createTable();
+  }
+
   private initializeControllers(controllers) {
     controllers.forEach(controller => {
-      this._app.use('/api/v1/', controller.router);
+      if (controller.isViewController)
+        this._app.use('/view/', controller.router);
+      else this._app.use('/api/v1/', controller.router);
     });
     this._app.use((req, res, next) => {
       res.status(404);
@@ -53,10 +67,13 @@ class App {
   }
 }
 
-const application = new App([new TwitterController(), new SlackController()]);
+const application = new App([
+  new TwitterController(),
+  new SlackController(),
+  new ViewController(),
+  new TestimonialController(),
+]);
 application.build();
 application._app.listen(application._port, () => {
-  return console.log(
-    `Express is listening at http://localhost:${application._port}`
-  );
+  return logger.info(`Express is listening at port :${application._port}`);
 });

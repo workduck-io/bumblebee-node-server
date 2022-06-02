@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Create Testimonial</title>
+  </head>
+  <script>
+    function createTestimonial(event) {
+      event.preventDefault();
+      const url = 'https://jsonplaceholder.typicode.com/todos/1';
+      console.log(event.target.elements.name.value);
+      console.log(event.target.elements.profileImageUrl.value);
+      console.log(event.target.elements.message.value);
+    }
+  </script>
+  <body>
+    <h1>Create new testimonial</h1>
+    <form onsubmit="createTestimonial(event)">
+      <label>Name</label><br />
+      <input type="text" name="name" /><br />
+      <label>Profile Image Url</label><br />
+      <input type="text" name="profileImageUrl" /><br />
+      <label>Testimonial message</label><br />
+      <input type="text" name="message" /><br />
+      <button type="submit">Create</button>
+    </form>
+  </body>
+</html>
