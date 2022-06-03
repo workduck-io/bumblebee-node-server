@@ -69,6 +69,15 @@ class ViewController {
         .json({ message: error.toString() });
     }
   };
+  login = async (request: Request, response: Response): Promise<void> => {
+    try {
+      response.sendFile(path.join(__dirname, '../views/Login.html'));
+    } catch (error) {
+      response
+        .status(statusCodes.INTERNAL_SERVER_ERROR)
+        .json({ message: error.toString() });
+    }
+  };
 }
 
 export default ViewController;

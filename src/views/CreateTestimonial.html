@@ -28,7 +28,11 @@
         });
 
         if (response.status === 200)
-          location.replace(`${window.location.origin}/view/list`);
+          location.replace(
+            `${window.location.origin}/view/list?token=${localStorage.getItem(
+              'auth-token'
+            )}`
+          );
       } catch (error) {
         console.log(error.message);
       }
@@ -36,7 +40,7 @@
   </script>
   <body>
     <h1>Create new testimonial</h1>
-    <form onsubmit="createTestimonial(event)">
+    <form onsubmit="createTestimonial(event)" method="post">
       <label>Name</label><br />
       <input type="text" name="name" /><br />
       <label>Profile Image Url</label><br />

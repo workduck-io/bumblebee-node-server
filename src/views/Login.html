@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login - Bumblebee</title>
+  </head>
+  <script>
+    async function login(event) {
+      event.preventDefault();
+      const url = `${window.location.origin}/api/v1/testimonial/login`;
+
+      try {
+        const response = await fetch(url, {
+          method: 'POST',
+          mode: 'same-origin',
+          cache: 'no-cache',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            userName: event.target.elements.username.value,
+            password: event.target.elements.password.value,
+          }),
+        });
+
+        if (response.status === 200) {
+          const data = await response.json();
+          localStorage.setItem('auth-token', data.token);
+          window.location.replace(
+            `${window.location.origin}/view/list?token=${localStorage.getItem(
+              'auth-token'
+            )}`
+          );
+        }
+      } catch (error) {
+        console.log(error.message);
+      }
+    }
+  </script>
+  <body>
+    <h1>Login</h1>
+    <form onsubmit="login(event)" method="post">
+      <label>Username</label><br />
+      <input type="text" name="username" /><br />
+      <label>Password</label><br />
+      <input type="password" name="password" /><br />
+      <button type="submit">Login</button>
+    </form>
+  </body>
+</html>

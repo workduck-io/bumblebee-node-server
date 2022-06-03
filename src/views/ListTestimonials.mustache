@@ -9,12 +9,20 @@
   <script>
     async function editTestimonial(testimonialId) {
       window.location.replace(
-        `${window.location.origin}/view/edit?testimonialId=${testimonialId}`
+        `${
+          window.location.origin
+        }/view/edit?testimonialId=${testimonialId}&token=${localStorage.getItem(
+          'auth-token'
+        )}`
       );
     }
 
     async function redirectToCreate() {
-      window.location.replace(`${window.location.origin}/view/create`);
+      window.location.replace(
+        `${window.location.origin}/view/create?token=${localStorage.getItem(
+          'auth-token'
+        )}`
+      );
     }
 
     async function deleteTestimonial(testimonialId) {
@@ -27,6 +35,7 @@
           cache: 'no-cache',
           headers: {
             'Content-Type': 'application/json',
+            authorization: localStorage.getItem('auth-token'),
           },
         });
 

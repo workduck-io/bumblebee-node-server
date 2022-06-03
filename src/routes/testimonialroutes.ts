@@ -24,4 +24,8 @@ export const initializeTestimonialRoutes = (
     `${urlPath}/delete`,
     TestimonialControllerObject.deleteTestimonial
   );
+  TestimonialControllerObject.router.post(
+    `${urlPath}/login`,
+    TestimonialControllerObject.login
+  );
 };

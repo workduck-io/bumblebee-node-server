@@ -5,6 +5,7 @@ import container from '../inversify.config';
 import { RequestParser } from '../libs/requestparser';
 import { TestimonialRepository as Repository } from '../repository/testimonialrepository';
 import { serializeTestimonials } from '../libs/serializer';
+import jwt from 'jsonwebtoken';
 
 class TestimonialController {
   public router = express.Router();
@@ -13,6 +14,26 @@ class TestimonialController {
   constructor() {
     initializeTestimonialRoutes(this);
   }
+
+  login = async (request: Request, response: Response): Promise<void> => {
+    try {
+      const { userName, password } = request.body;
+
+      if (
+        userName === process.env.ADMIN_USERNAME &&
+        password === process.env.ADMIN_PASSWORD
+      ) {
+        const token = jwt.sign({ userName }, process.env.JWT_PRIVATE_KEY, {
+          expiresIn: '1h',
+        });
+        response.status(statusCodes.OK).send({ token });
+      }
+    } catch (error) {
+      response
+        .status(statusCodes.INTERNAL_SERVER_ERROR)
+        .json({ message: error.toString() });
+    }
+  };
 
   createTestimonial = async (
     request: Request,
