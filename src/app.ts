@@ -12,6 +12,8 @@ import ViewController from './controllers/viewcontroller';
 import TestimonialController from './controllers/testimonialcontroller';
 import { TestimonialRepository as Repository } from './repository/testimonialrepository';
 import container from './inversify.config';
+import mustache from 'mustache-express';
+import path from 'path';
 
 class App {
   public _app: express.Application;
@@ -28,16 +30,23 @@ class App {
 
   public build() {
     this._app = express();
+    this.initializeTemplateEngine();
     this.initializeMiddlewares();
     this.initializeControllers(this._controllers);
     this.initializeErrorHandlers();
     this.initializeDB();
   }
 
+  private initializeTemplateEngine() {
+    this._app.engine('mustache', mustache());
+    this._app.set('view engine', 'mustache');
+  }
+
   private initializeMiddlewares() {
     this._app.use(cors());
     this._app.use(express.json());
     this._app.use(LogRequest);
+    this._app.use(express.static(path.join(__dirname, '/src/views')));
   }
 
   private initializeErrorHandlers() {

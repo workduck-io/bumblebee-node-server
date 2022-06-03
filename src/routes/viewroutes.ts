@@ -7,4 +7,12 @@ export const initializeViewRoutes = (
     '/create',
     ViewControllerObject.createTestimonial
   );
+  ViewControllerObject.router.get(
+    '/list',
+    ViewControllerObject.listTestimonials
+  );
+  ViewControllerObject.router.get(
+    '/edit',
+    ViewControllerObject.editTestimonial
+  );
 };

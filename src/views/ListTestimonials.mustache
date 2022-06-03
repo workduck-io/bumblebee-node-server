@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>All Testimonials</title>
+  </head>
+  <script>
+    async function editTestimonial(testimonialId) {
+      window.location.replace(
+        `${window.location.origin}/view/edit?testimonialId=${testimonialId}`
+      );
+    }
+
+    async function redirectToCreate() {
+      window.location.replace(`${window.location.origin}/view/create`);
+    }
+
+    async function deleteTestimonial(testimonialId) {
+      const url = `${window.location.origin}/api/v1/testimonial/delete?id=${testimonialId}`;
+
+      try {
+        const response = await fetch(url, {
+          method: 'DELETE',
+          mode: 'same-origin',
+          cache: 'no-cache',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        location.reload();
+      } catch (error) {
+        console.log(error.message);
+      }
+    }
+  </script>
+  <body>
+    <h1>all Testimonials</h1>
+    <button onclick="redirectToCreate()">Create New</button>
+    <div>
+      {{#testimonials}}
+      <div>
+        <div>
+          <p>Id:</p>
+          <p id="testimonialId_{{ id }}">{{ id }}</p>
+        </div>
+        <div>
+          <p>Name:</p>
+          {{ name }}
+        </div>
+        <div>
+          <p>Message:</p>
+          {{ text }}
+        </div>
+        <div>
+          <p>Profile Image:</p>
+          {{ profile_image_url }}
+        </div>
+        <div>
+          <p>Created At:</p>
+          {{ created_at }}
+        </div>
+        <div>
+          <button
+            onclick="editTestimonial(document.getElementById(`testimonialId_{{
+              id
+            }}`).innerText)"
+          >
+            Edit
+          </button>
+          <button
+            onclick="deleteTestimonial(document.getElementById(`testimonialId_{{
+              id
+            }}`).innerText)"
+          >
+            Delete
+          </button>
+        </div>
+      </div>
+      {{/testimonials}}
+      {{^testimonials}}No testimonials are found :({{/testimonials}}
+    </div>
+  </body>
+</html>

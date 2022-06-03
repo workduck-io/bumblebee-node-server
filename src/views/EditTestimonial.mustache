@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Edit Testimonial</title>
+  </head>
+  <script>
+    async function updateTestimonial(event, testimonialId) {
+      event.preventDefault();
+      const url = `${window.location.origin}/api/v1/testimonial/update`;
+
+      try {
+        const response = await fetch(url, {
+          method: 'PUT',
+          mode: 'same-origin',
+          cache: 'no-cache',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            id: testimonialId,
+            name: event.target.elements.name.value,
+            text: event.target.elements.message.value,
+            profileImageUrl: event.target.elements.profileImageUrl.value,
+            createdAt: new Date().toISOString(),
+          }),
+        });
+
+        if (response.status === 200)
+          window.location.replace(`${window.location.origin}/view/list`);
+      } catch (error) {
+        console.log(error.message);
+      }
+    }
+  </script>
+  <body>
+    <h1>Edit testimonial #{{ testimonial.id }}</h1>
+    <form onsubmit="updateTestimonial(event, `{{ testimonial.id }}`)">
+      <label>Name</label><br />
+      <input type="text" name="name" value="{{ testimonial.name }}" /><br />
+      <label>Profile Image Url</label><br />
+      <input
+        type="text"
+        name="profileImageUrl"
+        value="{{ testimonial.profile_image_url }}"
+      /><br />
+      <label>Testimonial message</label><br />
+      <input type="text" name="message" value="{{ testimonial.text }}" /><br />
+      <button type="submit">Update</button>
+    </form>
+  </body>
+</html>
