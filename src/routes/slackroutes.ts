@@ -1,3 +1,4 @@
+import { SlackTokenValidator } from '../middlewares/tokenvalidator';
 import SlackController from '../controllers/slackcontroller';
 
 export const initializeSlackRoutes = (
@@ -7,6 +8,7 @@ export const initializeSlackRoutes = (
 
   slackControllerObject.router.get(
     `${urlPath}/:channelId`,
+    [SlackTokenValidator],
     slackControllerObject.getAllSlackMessages
   );
 };

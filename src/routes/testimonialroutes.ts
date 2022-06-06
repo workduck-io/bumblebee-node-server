@@ -1,3 +1,4 @@
+import Auth from '../middlewares/auth';
 import TestimonialController from '../controllers/testimonialcontroller';
 
 export const initializeTestimonialRoutes = (
@@ -6,10 +7,12 @@ export const initializeTestimonialRoutes = (
   const urlPath = '/testimonial';
   TestimonialControllerObject.router.post(
     `${urlPath}/create`,
+    [Auth],
     TestimonialControllerObject.createTestimonial
   );
   TestimonialControllerObject.router.put(
     `${urlPath}/update`,
+    [Auth],
     TestimonialControllerObject.updateTestimonial
   );
   TestimonialControllerObject.router.get(
@@ -22,6 +25,7 @@ export const initializeTestimonialRoutes = (
   );
   TestimonialControllerObject.router.delete(
     `${urlPath}/delete`,
+    [Auth],
     TestimonialControllerObject.deleteTestimonial
   );
   TestimonialControllerObject.router.post(

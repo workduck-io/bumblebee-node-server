@@ -1,4 +1,5 @@
 import TwitterController from '../controllers/twittercontroller';
+import { TwitterTokenValidator } from '../middlewares/tokenvalidator';
 
 export const initializeTwitterRoutes = (
   twitterControllerObject: TwitterController
@@ -7,6 +8,7 @@ export const initializeTwitterRoutes = (
 
   twitterControllerObject.router.get(
     `${urlPath}/:tweetId`,
+    [TwitterTokenValidator],
     twitterControllerObject.getAllRepliesInfo
   );
 };
