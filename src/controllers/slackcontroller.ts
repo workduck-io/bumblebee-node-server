@@ -46,25 +46,9 @@ class SlackController {
         if (this.excludeMessageSubtypes.includes(message.subtype)) continue;
 
         const userId = message.user;
-        const cachedUserData = this._cache.get(
-          userId.toString(),
-          this._slackUserIdCacheLabel
-        );
 
-        let userInfo: any;
+        const userInfo = await this.fetchUserInfo(userId);
 
-        if (cachedUserData) {
-          userInfo = cachedUserData;
-        } else {
-          userInfo = (
-            (await this._slackManager.getUserInfo(userId)).data as any
-          ).user;
-          this._cache.set(
-            userId.toString(),
-            this._slackUserIdCacheLabel,
-            userInfo
-          );
-        }
         const messageReplies: any[] = (
           (await this._slackManager.getReplies(channelId, message.ts))
             .data as any
@@ -77,6 +61,10 @@ class SlackController {
             ...(await this.fetchMessageReplies(messageReplies))
           );
 
+        const parsedMessage = await this.parseSlackMessage(
+          message.blocks[0].elements[0].elements
+        );
+
         threadMessages.push({
           createdAt: new Date(message.ts * 1000).toISOString(),
           userInfo: {
@@ -84,7 +72,7 @@ class SlackController {
             userName: userInfo.name,
             profileImageUrl: userInfo.profile.image_original,
           },
-          text: message.text,
+          text: parsedMessage,
           replies: threadReplies,
         });
       }
@@ -102,29 +90,47 @@ class SlackController {
     }
   };
 
+  parseSlackMessage = async (messageElements: any[]): Promise<string> => {
+    let message = '';
+
+    for await (const element of messageElements) {
+      if (element.type === 'broadcast') message += `@${element.range}`;
+      if (element.type === 'user') {
+        const mentionedUserInfo = await this.fetchUserInfo(element.user_id);
+        message += `@${mentionedUserInfo.name}`;
+      }
+      if (element.type === 'text') message += element.text;
+      if (element.type === 'emoji') message += `:${element.name}:`;
+    }
+
+    return message;
+  };
+
+  fetchUserInfo = async (userId: string): Promise<any> => {
+    const cachedReplyUserData = this._cache.get(
+      userId.toString(),
+      this._slackUserIdCacheLabel
+    );
+
+    let userInfo: any;
+
+    if (cachedReplyUserData) {
+      userInfo = cachedReplyUserData;
+    } else {
+      userInfo = ((await this._slackManager.getUserInfo(userId)).data as any)
+        .user;
+      this._cache.set(userId.toString(), this._slackUserIdCacheLabel, userInfo);
+    }
+
+    return userInfo;
+  };
+
   fetchMessageReplies = async (messageReplies: any[]): Promise<any[]> => {
     const threadReplies: GenericThread[] = [];
     messageReplies.map(async reply => {
       const replyUserId = reply.user;
-      const cachedReplyUserData = this._cache.get(
-        replyUserId.toString(),
-        this._slackUserIdCacheLabel
-      );
+      const replyUserInfo = await this.fetchUserInfo(replyUserId);
 
-      let replyUserInfo: any;
-
-      if (cachedReplyUserData) {
-        replyUserInfo = cachedReplyUserData;
-      } else {
-        replyUserInfo = (
-          (await this._slackManager.getUserInfo(replyUserId)).data as any
-        ).user;
-        this._cache.set(
-          replyUserId.toString(),
-          this._slackUserIdCacheLabel,
-          replyUserInfo
-        );
-      }
       threadReplies.push({
         text: reply.text,
         createdAt: new Date(reply.ts * 1000).toISOString(),
