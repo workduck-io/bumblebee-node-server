@@ -4,6 +4,12 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor"
+      crossorigin="anonymous"
+    />
     <title>Login - Bumblebee</title>
     <style>
       body {
@@ -39,7 +45,7 @@
         display: flex;
         flex-direction: column;
       }
-      .form-group label {
+      /* .form-group label {
         font-size: 1.25rem;
       }
       .form-group input {
@@ -48,13 +54,13 @@
         border: none;
         font-size: 1.15rem;
         background-color: #e8e8e8;
-      }
-      h1 {
+      } */
+      /* h1 {
         text-align: left;
         font-weight: 500;
         font-size: 2.25rem;
-        letter-spacing: 0.25rem;
-      }
+        letter-spacing: 0.15rem;
+      } */
       button {
         width: 20%;
         font-size: 1.05rem;
@@ -67,7 +73,7 @@
       button:hover {
         color: white;
         background-color: black;
-        transform: translateY(-2px);
+        transform: translateY(-5px);
         transition: all 0.3s ease-in-out;
       }
     </style>
@@ -108,16 +114,18 @@
   <body>
     <div class="form-container">
       <div class="form">
-        <h1>Login</h1>
+        <h1 class="my-3 display-5">Login</h1>
         <form onsubmit="login(event)" method="post">
           <div class="form-group">
-            <label>Username</label><br />
-            <input type="text" name="username" /><br />
+            <label class="form-label">Username</label>
+            <input class="form-control" type="text" name="username" />
           </div>
+          <br />
           <div class="form-group">
-            <label>Password</label><br />
-            <input type="password" name="password" /><br />
+            <label class="form-label">Password</label>
+            <input class="form-control" type="password" name="password" />
           </div>
+          <br />
           <button type="submit">Login</button>
         </form>
       </div>
