@@ -5,6 +5,75 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Create Testimonial</title>
+    <style>
+      body {
+        background-color: #fafafc;
+        font-family: sans-serif;
+      }
+      .form-container {
+        display: flex;
+        width: 100vw;
+        height: 80vh;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+      }
+      .form {
+        box-shadow: 0 4px 8px 0 rgb(0 90 143 / 15%);
+        border-width: 1rem;
+        border: 2px solid white;
+        height: 90%;
+        width: 35%;
+        border-radius: 2rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+        margin-top: 2rem;
+      }
+      form {
+        width: 90%;
+      }
+      .form-group {
+        width: 100%;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+      }
+      .form-group label {
+        font-size: 1.25rem;
+      }
+      .form-group input {
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        border: none;
+        font-size: 1.15rem;
+        background-color: #e8e8e8;
+      }
+      button {
+        width: 20%;
+        font-size: 1.05rem;
+        font-weight: 700;
+        border: 2px solid black;
+        border-radius: 15px;
+        margin-top: 0.5rem;
+        background-color: white;
+      }
+      button:hover {
+        cursor: pointer;
+        color: white;
+        background-color: green;
+        border: 2px solid green;
+        transform: translateY(-2px);
+        transition: all 0.3s ease-in-out;
+      }
+      h1 {
+        text-align: left;
+        font-weight: 500;
+        font-size: 2.25rem;
+        letter-spacing: 0.15rem;
+      }
+    </style>
   </head>
   <script>
     async function createTestimonial(event) {
@@ -40,15 +109,26 @@
     }
   </script>
   <body>
-    <h1>Create new testimonial</h1>
-    <form onsubmit="createTestimonial(event)" method="post">
-      <label>Name</label><br />
-      <input type="text" name="name" /><br />
-      <label>Profile Image Url</label><br />
-      <input type="text" name="profileImageUrl" /><br />
-      <label>Testimonial message</label><br />
-      <input type="text" name="message" /><br />
-      <button type="submit">Create</button>
-    </form>
+    <div class="form-container">
+      <div class="form">
+        <h1>Create new testimonial</h1>
+        <form onsubmit="createTestimonial(event)" method="post">
+          <div class="form-group">
+            <label>Name</label><br />
+            <input type="text" name="name" /><br />
+          </div>
+          <div class="form-group">
+            <label>Profile Image Url</label><br />
+            <input type="text" name="profileImageUrl" />
+          </div>
+          <br />
+          <div class="form-group">
+            <label>Testimonial message</label><br />
+            <input type="text" name="message" /><br />
+          </div>
+          <button type="submit">Create</button>
+        </form>
+      </div>
+    </div>
   </body>
 </html>

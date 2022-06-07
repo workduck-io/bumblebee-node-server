@@ -5,6 +5,75 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Edit Testimonial</title>
+    <style>
+    body {
+        background-color: #fafafc;
+        font-family: sans-serif;
+      }
+      .form-container {
+        display: flex;
+        width: 100vw;
+        height: 90vh;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+      }
+      .form {
+        box-shadow: 0 4px 8px 0 rgb(0 90 143 / 15%);
+        border-width: 1rem;
+        border: 2px solid white;
+        height: 100%;
+        width: 35%;
+        border-radius: 2rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.25rem;
+        margin-top: 2rem;
+      }
+      form {
+        width: 90%;
+      }
+      .form-group {
+        width: 100%;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+      }
+      .form-group label {
+        font-size: 1.25rem;
+      }
+      .form-group input {
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        border: none;
+        font-size: 1.15rem;
+        background-color: #e8e8e8;
+      }
+      button {
+        width: 20%;
+        font-size: 1.05rem;
+        font-weight: 700;
+        border: 2px solid black;
+        border-radius: 15px;
+        margin-top: -1.5rem;
+        background-color: white;
+      }
+      button:hover {
+        cursor: pointer;
+        color: white;
+        background-color: green;
+        border: 2px solid green;
+        transform: translateY(-2px);
+        transition: all 0.3s ease-in-out;
+      }
+      h1 {
+        text-align: left;
+        font-weight: 500;
+        font-size: 2.25rem;
+        letter-spacing: 0.15rem;
+      }
+      </style>
   </head>
   <script>
     async function updateTestimonial(event, testimonialId) {
@@ -41,22 +110,38 @@
     }
   </script>
   <body>
+  <div class="form-container">
+    <div class="form">
     <h1>Edit testimonial #{{ testimonial.id }}</h1>
     <form
       onsubmit="updateTestimonial(event, `{{ testimonial.id }}`)"
       method="post"
     >
-      <label>Name</label><br />
-      <input type="text" name="name" value="{{ testimonial.name }}" /><br />
-      <label>Profile Image Url</label><br />
+    <div class="form-group">
+    <label>Name</label><br />
+      <input type="text" name="name" value="{{ testimonial.name }}" />
+      <br />
+      </div>
+      <br />
+    <div class="form-group">
+    <label>Profile Image Url</label><br />
       <input
         type="text"
         name="profileImageUrl"
         value="{{ testimonial.profile_image_url }}"
-      /><br />
+      />
+      <br/>
+      </div>
+      <br />
+      <div class="form-group">
       <label>Testimonial message</label><br />
-      <input type="text" name="message" value="{{ testimonial.text }}" /><br />
+      <input type="text" name="message" value="{{ testimonial.text }}" />
+      <br />
+      </div>
+      <br />
       <button type="submit">Update</button>
     </form>
+    </div>
+    </div>
   </body>
 </html>
