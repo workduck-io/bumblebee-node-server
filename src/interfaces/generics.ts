@@ -22,6 +22,8 @@ export interface GenericThread {
   userInfo: UserInfo;
   replies?: GenericThread[];
   tweetURL?: string;
+  slackURL?: string;
+  discordURL?: string;
 }
 
 export interface UserInfo {

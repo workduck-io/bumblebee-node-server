@@ -37,6 +37,7 @@ module.exports = {
     'node/prefer-promises/dns': 'error',
     'node/prefer-promises/fs': 'error',
     '@typescript-eslint/no-explicit-any': 'off',
+    '@typescript-eslint/explicit-module-boundary-types': 'off',
   },
   settings: {
     node: {

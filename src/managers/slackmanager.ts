@@ -34,6 +34,21 @@ export class SlackManager {
     }
   }
 
+  async getSlackTeamInfo(): Promise<GotResponse> {
+    try {
+      const url = `${this.baseEndpointURL}team.info`;
+      return await getFromSlack(url, this.token);
+    } catch (error) {
+      errorlib({
+        message: error.message,
+        errorCode: errorCodes.UNKNOWN,
+        errorObject: error,
+        statusCode: statusCodes.INTERNAL_SERVER_ERROR,
+        metaData: error.message,
+      });
+    }
+  }
+
   async getReplies(channelId: string, timeStamp: string): Promise<GotResponse> {
     try {
       const params: SlackRepliesParams = {

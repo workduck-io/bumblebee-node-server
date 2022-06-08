@@ -7,7 +7,7 @@ export const initializeDiscordRoutes = (
   const urlPath = '/discord';
 
   discordControllerObject.router.get(
-    `${urlPath}/:channelId`,
+    `${urlPath}/:guildId/:channelId`,
     [DiscordTokenValidator],
     discordControllerObject.getAllDiscordMessages
   );

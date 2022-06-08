@@ -88,7 +88,11 @@ export const serializeTestimonials = (testimonials: any[]): GenericResponse => {
   return serializedTestimonials;
 };
 
-export const serializeDiscordMessages = (messages: any[]): GenericResponse => {
+export const serializeDiscordMessages = (
+  messages: any[],
+  guildId: string,
+  channelId: string
+): GenericResponse => {
   const serializedDiscordMessages: GenericResponse = {
     provider: Provider.DISCORD,
     threads: [],
@@ -107,14 +111,19 @@ export const serializeDiscordMessages = (messages: any[]): GenericResponse => {
             ? `${discordCDNURL}avatars/${message.author.id}/${message.author.avatar}.png`
             : null,
       },
-      replies: serializeDiscordReplies(message.replies),
+      replies: serializeDiscordReplies(message.replies, guildId, channelId),
+      discordURL: `https://discord.com/channels/${guildId}/${channelId}/${message.id}`,
     });
   });
 
   return serializedDiscordMessages;
 };
 
-const serializeDiscordReplies = (replies: any[]): GenericThread[] => {
+const serializeDiscordReplies = (
+  replies: any[],
+  guildId: string,
+  channelId: string
+): GenericThread[] => {
   const serializedThreadReplies: GenericThread[] = [];
 
   replies.map(reply => {
@@ -129,6 +138,7 @@ const serializeDiscordReplies = (replies: any[]): GenericThread[] => {
             ? `${discordCDNURL}avatars/${reply.author.id}/${reply.author.avatar}.png`
             : null,
       },
+      discordURL: `https://discord.com/channels/${guildId}/${channelId}/${reply.id}`,
     });
   });
 

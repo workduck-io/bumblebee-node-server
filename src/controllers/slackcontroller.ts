@@ -16,6 +16,7 @@ class SlackController {
   public router = express.Router();
   private _cache: Cache = container.get<Cache>(Cache);
   private _slackUserIdCacheLabel = 'SLACKUSERID';
+  private _slackTeamWorkspaceCacheLabel = 'SLACKWORKSPACENAME';
 
   private excludeMessageSubtypes = [
     'channel_join',
@@ -42,7 +43,11 @@ class SlackController {
       ).messages;
 
       const threadMessages: GenericThread[] = [];
-      for (const message of messages) {
+      const workspaceInfo = await this.fetchWorkspaceInfo(
+        process.env.SLACK_BEARER_TOKEN.toString()
+      );
+
+      for await (const message of messages) {
         if (this.excludeMessageSubtypes.includes(message.subtype)) continue;
 
         const userId = message.user;
@@ -58,7 +63,11 @@ class SlackController {
         // append replies to the response
         messageReplies &&
           threadReplies.push(
-            ...(await this.fetchMessageReplies(messageReplies))
+            ...(await this.fetchMessageReplies(
+              messageReplies,
+              channelId,
+              workspaceInfo
+            ))
           );
 
         const parsedMessage = await this.parseSlackMessage(
@@ -76,6 +85,9 @@ class SlackController {
           },
           text: parsedMessage,
           replies: threadReplies,
+          slackURL: `${workspaceInfo.url}archives/${channelId}/p${message.ts
+            .split('.')
+            .join('')}`,
         });
       }
 
@@ -127,7 +139,31 @@ class SlackController {
     return userInfo;
   };
 
-  fetchMessageReplies = async (messageReplies: any[]): Promise<any[]> => {
+  fetchWorkspaceInfo = async (token: string): Promise<any> => {
+    const cachedWorkspaceInfo = this._cache.get(
+      token,
+      this._slackTeamWorkspaceCacheLabel
+    );
+
+    let workspaceInfo: any;
+
+    if (cachedWorkspaceInfo) {
+      workspaceInfo = cachedWorkspaceInfo;
+    } else {
+      workspaceInfo = (
+        (await this._slackManager.getSlackTeamInfo()).data as any
+      ).team;
+      this._cache.set(token, this._slackTeamWorkspaceCacheLabel, workspaceInfo);
+    }
+
+    return workspaceInfo;
+  };
+
+  fetchMessageReplies = async (
+    messageReplies: any[],
+    channelId: string,
+    workspaceInfo: any
+  ): Promise<any[]> => {
     const threadReplies: GenericThread[] = [];
     messageReplies.map(async reply => {
       const replyUserId = reply.user;
@@ -142,6 +178,9 @@ class SlackController {
           userName: replyUserInfo.name,
           profileImageUrl: replyUserInfo.profile.image_original,
         },
+        slackURL: `${workspaceInfo.url}archives/${channelId}/p${reply.ts
+          .split('.')
+          .join('')}`,
       });
     });
 
