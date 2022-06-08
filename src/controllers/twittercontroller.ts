@@ -35,6 +35,10 @@ class TwitterController {
       const referenceTweetDict: Record<string, any[]> = {};
       const tweetDict: Record<string, any> = {};
 
+      if (!tweetReplies) {
+        response.status(statusCodes.NO_CONTENT).json([]);
+        return;
+      }
       // craft the payload of all userIds from the tweet replies
       tweetReplies.map(tweetReply => {
         tweetDict[tweetReply.id] = tweetReply;

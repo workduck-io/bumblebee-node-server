@@ -54,3 +54,19 @@ export const getFromSlack = async (
   gotResponse.data = JSON.parse(gotResponse.data as any);
   return gotResponse;
 };
+
+export const getFromDiscord = async (
+  url: string,
+  authToken: string,
+  searchParams?: any
+): Promise<GotResponse> => {
+  await got.get(url, {
+    headers: {
+      authorization: `Bot ${authToken}`,
+    },
+    ...(searchParams && { searchParams }),
+    ...gotConfig,
+  });
+  gotResponse.data = JSON.parse(gotResponse.data as any);
+  return gotResponse;
+};

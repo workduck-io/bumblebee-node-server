@@ -4,6 +4,8 @@ import {
   Provider,
 } from '../interfaces/generics';
 
+const discordCDNURL = 'https://cdn.discordapp.com/';
+
 export const serializeTwitterReplies = (
   tweetReplies: any[],
   usersData: any[],
@@ -20,6 +22,8 @@ export const serializeTwitterReplies = (
     });
 
     serializedTweets.push({
+      id: tweetReply.id,
+      provider: Provider.TWITTER,
       createdAt: tweetReply.created_at,
       text: tweetReply.text,
       userInfo: {
@@ -30,8 +34,8 @@ export const serializeTwitterReplies = (
       ...(tweetReply.replies && {
         replies: serializeReplies(tweetReply.replies, userDataDict),
       }),
-      ...(tweetReply.tweetUrl && {
-        tweetURL: tweetReply.tweetUrl,
+      ...(!tweetReply.replies && {
+        tweetURL: `https://twitter.com/anyUser/status/${tweetReply.id}`,
       }),
     });
   }
@@ -48,6 +52,7 @@ const serializeReplies = (
     const tweetReply = replies[index];
 
     serializedTweetsCollection.push({
+      id: tweetReply.id,
       createdAt: tweetReply.created_at,
       text: tweetReply.text,
       userInfo: {
@@ -55,6 +60,7 @@ const serializeReplies = (
         profileImageUrl: usersDataDict[tweetReply.author_id].profile_image_url,
         userName: usersDataDict[tweetReply.author_id].username,
       },
+      tweetURL: `https://twitter.com/anyUser/status/${tweetReply.id}`,
     });
   }
   return serializedTweetsCollection;
@@ -68,6 +74,7 @@ export const serializeTestimonials = (testimonials: any[]): GenericResponse => {
 
   testimonials.map(testimonial => {
     serializedTestimonials.threads.push({
+      provider: Provider.BUMBLEBEE,
       id: testimonial.id,
       createdAt: testimonial.created_at,
       text: testimonial.text,
@@ -79,4 +86,51 @@ export const serializeTestimonials = (testimonials: any[]): GenericResponse => {
   });
 
   return serializedTestimonials;
+};
+
+export const serializeDiscordMessages = (messages: any[]): GenericResponse => {
+  const serializedDiscordMessages: GenericResponse = {
+    provider: Provider.DISCORD,
+    threads: [],
+  };
+
+  messages.map(message => {
+    serializedDiscordMessages.threads.push({
+      provider: Provider.DISCORD,
+      createdAt: message.timestamp,
+      text: message.content,
+      id: message.id,
+      userInfo: {
+        name: message.author.username,
+        profileImageUrl:
+          message.author.avatar !== null
+            ? `${discordCDNURL}avatars/${message.author.id}/${message.author.avatar}.png`
+            : null,
+      },
+      replies: serializeDiscordReplies(message.replies),
+    });
+  });
+
+  return serializedDiscordMessages;
+};
+
+const serializeDiscordReplies = (replies: any[]): GenericThread[] => {
+  const serializedThreadReplies: GenericThread[] = [];
+
+  replies.map(reply => {
+    serializedThreadReplies.push({
+      createdAt: reply.timestamp,
+      text: reply.content,
+      id: reply.id,
+      userInfo: {
+        name: reply.author.username,
+        profileImageUrl:
+          reply.author.avatar !== null
+            ? `${discordCDNURL}avatars/${reply.author.id}/${reply.author.avatar}.png`
+            : null,
+      },
+    });
+  });
+
+  return serializedThreadReplies;
 };

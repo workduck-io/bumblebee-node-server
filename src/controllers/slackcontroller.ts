@@ -66,6 +66,8 @@ class SlackController {
         );
 
         threadMessages.push({
+          id: message.client_msg_id,
+          provider: Provider.SLACK,
           createdAt: new Date(message.ts * 1000).toISOString(),
           userInfo: {
             name: userInfo.real_name,
@@ -132,6 +134,7 @@ class SlackController {
       const replyUserInfo = await this.fetchUserInfo(replyUserId);
 
       threadReplies.push({
+        id: reply.client_msg_id,
         text: reply.text,
         createdAt: new Date(reply.ts * 1000).toISOString(),
         userInfo: {

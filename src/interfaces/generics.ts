@@ -11,9 +11,11 @@ export enum Provider {
   SLACK = 'slack',
   TWITTER = 'twitter',
   BUMBLEBEE = 'bumblebee',
+  DISCORD = 'discord',
 }
 
 export interface GenericThread {
+  provider?: Provider;
   id?: string;
   text: string;
   createdAt: string;

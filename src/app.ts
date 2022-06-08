@@ -14,6 +14,7 @@ import { TestimonialRepository as Repository } from './repository/testimonialrep
 import container from './inversify.config';
 import mustache from 'mustache-express';
 import path from 'path';
+import DiscordController from './controllers/discordcontroller';
 
 class App {
   public _app: express.Application;
@@ -79,6 +80,7 @@ class App {
 const application = new App([
   new TwitterController(),
   new SlackController(),
+  new DiscordController(),
   new ViewController(),
   new TestimonialController(),
 ]);

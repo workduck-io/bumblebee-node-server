@@ -7,7 +7,7 @@ export async function SlackTokenValidator(
   next: NextFunction
 ): Promise<void> {
   if (process.env.SLACK_BEARER_TOKEN) next();
-  else res.status(statusCodes.FORBIDDEN).send('Slack Auth token missing');
+  else res.status(statusCodes.UNAUTHORIZED).send('Slack Auth token missing');
 }
 
 export async function TwitterTokenValidator(
@@ -16,5 +16,15 @@ export async function TwitterTokenValidator(
   next: NextFunction
 ): Promise<void> {
   if (process.env.TWITTER_BEARER_TOKEN) next();
-  else res.status(statusCodes.FORBIDDEN).send('Twitter Auth token missing');
+  else res.status(statusCodes.UNAUTHORIZED).send('Twitter Auth token missing');
+}
+
+export async function DiscordTokenValidator(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
+  if (process.env.DISCORD_BEARER_TOKEN) next();
+  else
+    res.status(statusCodes.UNAUTHORIZED).send('Discord Bot Auth token missing');
 }

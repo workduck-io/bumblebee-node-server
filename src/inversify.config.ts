@@ -6,6 +6,7 @@ import { Cache } from './libs/cache';
 import { SlackManager } from './managers/slackmanager';
 import { DBManager } from './managers/dbmanager';
 import { TestimonialRepository } from './repository/testimonialrepository';
+import { DiscordManager } from './managers/discordmanager';
 
 // Application classes
 const container = new Container();
@@ -17,6 +18,10 @@ container.bind<SlackManager>(SlackManager).to(SlackManager).inSingletonScope();
 container
   .bind<TestimonialRepository>(TestimonialRepository)
   .to(TestimonialRepository)
+  .inSingletonScope();
+container
+  .bind<DiscordManager>(DiscordManager)
+  .to(DiscordManager)
   .inSingletonScope();
 
 // Library classes
