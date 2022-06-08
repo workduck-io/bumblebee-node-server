@@ -29,6 +29,7 @@ class TestimonialController {
         response.status(statusCodes.OK).send({ token });
       }
     } catch (error) {
+      console.log(error);
       response
         .status(statusCodes.INTERNAL_SERVER_ERROR)
         .json({ message: error.toString() });

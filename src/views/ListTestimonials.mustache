@@ -5,6 +5,104 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>All Testimonials</title>
+    <style>
+      body{
+        font-family:sans-serif;
+      }
+      .header{
+        width:100%;
+        text-align:center;
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+      }
+      .header h1{
+        font-size:3rem;
+        letter-spacing:0.15rem;
+      }
+      .header button{
+        font-size:1.25rem;
+        color:green;
+        border:2px solid green;
+        border-radius:15px;
+      }
+      .header button:hover{
+        background-color:green;
+        color:white;
+        transition:0.3s all ease-in-out;
+      }
+      .t-container
+      {
+        width:90%;
+        padding:3rem;
+        display:grid;
+        grid-template-columns:repeat(4,1fr);
+        gap:0.75rem;
+      }
+      .testimonials
+      {
+        box-shadow: 0 4px 8px 0 rgb(0 90 143 / 15%);
+        padding:0.5rem;
+      }
+      .t-header{
+        width:100%;
+        display:flex;
+        gap:0.5rem;
+        align-items:center;
+        font-size:0.9rem;
+        justify-content:space-between;
+      }
+      .t-body{
+        width:100%;
+        display:flex;
+        flex-direction:column;
+        gap:0.35rem;
+      }
+      .info{
+        display:flex;
+        align-items:center;
+        gap:0.25rem;
+      }
+      .label{
+        font-weight:700;
+        font-size:0.75rem;
+      }
+      .value{
+        font-size:1.15rem;
+      }
+      .button-group{
+        width:100%;
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+      }
+      .button-group button{
+        font-size:0.9rem;
+        padding:0.15rem 0.5rem;
+        border-radius:10px;
+        background-color:white;
+      }
+      .edit{
+        color:#FF8800;
+        border:2px solid #FF8800;
+      }
+      .edit:hover{
+        color:white;
+        background:#FF8800;
+        cursor:pointer;
+        transition:0.3s all ease-in-out;
+      }
+      .delete{
+        color:red;
+        border:2px solid red;
+      }
+      .delete:hover{
+        color:white;
+        background:red;
+        cursor:pointer;
+        transition:0.3s all ease-in-out;
+      }
+    </style>
   </head>
   <script>
     async function editTestimonial(testimonialId) {
@@ -46,33 +144,41 @@
     }
   </script>
   <body>
-    <h1>all Testimonials</h1>
-    <button onclick="redirectToCreate()">Create New</button>
-    <div>
+  <div class="container">
+    <div class="header">
+      <h1>All Testimonials</h1>
+      <button onclick="redirectToCreate()">Create New</button>
+    </div>
+    <div class="t-container">
       {{#testimonials}}
-      <div>
-        <div>
-          <p>Id:</p>
-          <p id="testimonialId_{{ id }}">{{ id }}</p>
+      <div class="testimonials">
+      <div class="t-header">
+        <div class="info">
+          <p class="label">Id:</p>
+          <p class="value" id="testimonialId_{{ id }}">{{ id }}</p>
         </div>
-        <div>
-          <p>Name:</p>
-          {{ name }}
+        <div class = "info">
+          <p class="label">Name:</p>
+          <p class="value">{{ name }}</p>
         </div>
-        <div>
-          <p>Message:</p>
-          {{ text }}
         </div>
-        <div>
-          <p>Profile Image:</p>
-          {{ profile_image_url }}
+        <div class="t-body">
+        <div class="b-info">
+          <p class="label">Message:</p>
+          <p class="value">{{ text }}</p>
         </div>
-        <div>
-          <p>Created At:</p>
-          {{ created_at }}
+        <div class="b-info">
+          <p class="label">Profile Image:</p>
+          <p class="value">{{ profile_image_url }}</p>
         </div>
-        <div>
+        <div class = "b-info">
+          <p class="label">Created At:</p>
+          <p class="value">{{ created_at }}</p>
+        </div>
+        </div>
+        <div class="button-group">
           <button
+          class ="edit"
             onclick="editTestimonial(document.getElementById(`testimonialId_{{
               id
             }}`).innerText)"
@@ -80,6 +186,7 @@
             Edit
           </button>
           <button
+          class ="delete"
             onclick="deleteTestimonial(document.getElementById(`testimonialId_{{
               id
             }}`).innerText)"
@@ -90,6 +197,7 @@
       </div>
       {{/testimonials}}
       {{^testimonials}}No testimonials are found :({{/testimonials}}
+    </div>
     </div>
   </body>
 </html>
