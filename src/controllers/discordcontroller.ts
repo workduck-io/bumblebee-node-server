@@ -30,8 +30,6 @@ class DiscordController {
       //create message dict with message_id as key and the message as the value
       messages.map(message => {
         message.replies = [];
-        console.log(message.guild_id);
-
         discordMessageDict[message.id] = message;
       });
 
