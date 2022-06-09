@@ -85,7 +85,7 @@ class SlackController {
           },
           text: parsedMessage,
           replies: threadReplies,
-          slackURL: `${workspaceInfo.url}archives/${channelId}/p${message.ts
+          threadURL: `${workspaceInfo.url}archives/${channelId}/p${message.ts
             .split('.')
             .join('')}`,
         });
@@ -178,7 +178,7 @@ class SlackController {
           userName: replyUserInfo.name,
           profileImageUrl: replyUserInfo.profile.image_original,
         },
-        slackURL: `${workspaceInfo.url}archives/${channelId}/p${reply.ts
+        threadURL: `${workspaceInfo.url}archives/${channelId}/p${reply.ts
           .split('.')
           .join('')}`,
       });

@@ -35,7 +35,7 @@ export const serializeTwitterReplies = (
         replies: serializeReplies(tweetReply.replies, userDataDict),
       }),
       ...(!tweetReply.replies && {
-        tweetURL: `https://twitter.com/anyUser/status/${tweetReply.id}`,
+        threadURL: `https://twitter.com/anyUser/status/${tweetReply.id}`,
       }),
     });
   }
@@ -60,7 +60,7 @@ const serializeReplies = (
         profileImageUrl: usersDataDict[tweetReply.author_id].profile_image_url,
         userName: usersDataDict[tweetReply.author_id].username,
       },
-      tweetURL: `https://twitter.com/anyUser/status/${tweetReply.id}`,
+      threadURL: `https://twitter.com/anyUser/status/${tweetReply.id}`,
     });
   }
   return serializedTweetsCollection;
@@ -112,7 +112,7 @@ export const serializeDiscordMessages = (
             : null,
       },
       replies: serializeDiscordReplies(message.replies, guildId, channelId),
-      discordURL: `https://discord.com/channels/${guildId}/${channelId}/${message.id}`,
+      threadURL: `https://discord.com/channels/${guildId}/${channelId}/${message.id}`,
     });
   });
 
@@ -138,7 +138,7 @@ const serializeDiscordReplies = (
             ? `${discordCDNURL}avatars/${reply.author.id}/${reply.author.avatar}.png`
             : null,
       },
-      discordURL: `https://discord.com/channels/${guildId}/${channelId}/${reply.id}`,
+      threadURL: `https://discord.com/channels/${guildId}/${channelId}/${reply.id}`,
     });
   });
 

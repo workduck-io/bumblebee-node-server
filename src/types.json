@@ -55,6 +55,9 @@
                 "id": {
                     "type": "string"
                 },
+                "provider": {
+                    "$ref": "types#/definitions/Provider"
+                },
                 "replies": {
                     "items": {
                         "$ref": "types#/definitions/GenericThread"
@@ -64,7 +67,7 @@
                 "text": {
                     "type": "string"
                 },
-                "tweetURL": {
+                "threadURL": {
                     "type": "string"
                 },
                 "userInfo": {
@@ -113,6 +116,7 @@
         "Provider": {
             "enum": [
                 "bumblebee",
+                "discord",
                 "slack",
                 "twitter"
             ],
