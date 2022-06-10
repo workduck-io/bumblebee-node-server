@@ -31,9 +31,13 @@ export const serializeTwitterReplies = (
         profileImageUrl: userDataDict[tweetReply.author_id].profile_image_url,
         userName: userDataDict[tweetReply.author_id].username,
       },
-      ...(tweetReply.replies && {
-        replies: serializeReplies(tweetReply.replies, userDataDict),
-      }),
+      ...(tweetReply.replies
+        ? {
+            replies: serializeReplies(tweetReply.replies, userDataDict),
+          }
+        : {
+            replies: [],
+          }),
       ...(!tweetReply.replies && {
         threadURL: `https://twitter.com/anyUser/status/${tweetReply.id}`,
       }),
