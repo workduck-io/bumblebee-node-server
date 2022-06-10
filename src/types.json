@@ -230,7 +230,6 @@
                 }
             },
             "required": [
-                "name",
                 "profileImageUrl"
             ],
             "type": "object"

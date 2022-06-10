@@ -105,7 +105,7 @@ export const serializeDiscordMessages = (
       text: message.content,
       id: message.id,
       userInfo: {
-        name: message.author.username,
+        userName: message.author.username,
         profileImageUrl:
           message.author.avatar !== null
             ? `${discordCDNURL}avatars/${message.author.id}/${message.author.avatar}.png`
@@ -132,7 +132,7 @@ const serializeDiscordReplies = (
       text: reply.content,
       id: reply.id,
       userInfo: {
-        name: reply.author.username,
+        userName: reply.author.username,
         profileImageUrl:
           reply.author.avatar !== null
             ? `${discordCDNURL}avatars/${reply.author.id}/${reply.author.avatar}.png`

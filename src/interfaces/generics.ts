@@ -26,7 +26,7 @@ export interface GenericThread {
 
 export interface UserInfo {
   userName?: string;
-  name: string;
+  name?: string;
   profileImageUrl: string;
 }
 
