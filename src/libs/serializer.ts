@@ -86,6 +86,7 @@ export const serializeTestimonials = (testimonials: any[]): GenericResponse => {
         name: testimonial.name,
         profileImageUrl: testimonial.profile_image_url,
       },
+      replies: [],
     });
   });
 
