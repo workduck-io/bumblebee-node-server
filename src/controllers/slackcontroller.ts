@@ -117,6 +117,7 @@ class SlackController {
         message += `@${mentionedUserInfo.name}`;
       } else if (element.type === 'text') message += element.text;
       else if (element.type === 'emoji') message += `:${element.name}:`;
+      else if (element.type === 'link') message += `${element.url}`;
     }
 
     return message;
@@ -167,13 +168,17 @@ class SlackController {
     workspaceInfo: any
   ): Promise<any[]> => {
     const threadReplies: GenericThread[] = [];
-    messageReplies.map(async reply => {
+
+    for await (const reply of messageReplies) {
       const replyUserId = reply.user;
       const replyUserInfo = await this.fetchUserInfo(replyUserId);
+      const parsedReply = reply.blocks
+        ? await this.parseSlackMessage(reply.blocks[0].elements[0].elements)
+        : reply.text;
 
       threadReplies.push({
         id: reply.client_msg_id,
-        text: reply.text,
+        text: parsedReply,
         createdAt: new Date(reply.ts * 1000).toISOString(),
         userInfo: {
           name: replyUserInfo.real_name,
@@ -184,7 +189,7 @@ class SlackController {
           .split('.')
           .join('')}`,
       });
-    });
+    }
 
     return threadReplies;
   };
