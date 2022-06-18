@@ -49,9 +49,12 @@ class SlackController {
 
       for await (const message of messages) {
         if (this.excludeMessageSubtypes.includes(message.subtype)) continue;
+        const text = message.text;
 
         const userId = message.user;
 
+        // escaping the item if it a bot created message
+        if (!userId) continue;
         const userInfo = await this.fetchUserInfo(userId);
 
         const messageReplies: any[] = (
@@ -100,7 +103,7 @@ class SlackController {
     } catch (error) {
       response
         .status(statusCodes.INTERNAL_SERVER_ERROR)
-        .json({ message: error.toString() });
+        .json({ message: JSON.stringify(error) });
     }
   };
 
@@ -109,12 +112,11 @@ class SlackController {
 
     for await (const element of messageElements) {
       if (element.type === 'broadcast') message += `@${element.range}`;
-      if (element.type === 'user') {
+      else if (element.type === 'user') {
         const mentionedUserInfo = await this.fetchUserInfo(element.user_id);
         message += `@${mentionedUserInfo.name}`;
-      }
-      if (element.type === 'text') message += element.text;
-      if (element.type === 'emoji') message += `:${element.name}:`;
+      } else if (element.type === 'text') message += element.text;
+      else if (element.type === 'emoji') message += `:${element.name}:`;
     }
 
     return message;
