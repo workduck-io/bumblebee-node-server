@@ -12,8 +12,7 @@
   "scripts": {
     "lint": "eslint . --ext .js,.ts,.tsx",
     "lint-fix": "eslint . --ext .js,.ts,.tsx --fix",
-    "start": "tsc && node dist/app.js",
-    "build": "tsc",
+    "start": "ts-node src/app.ts",
     "dev": "nodemon src/app.ts",
     "debug": "export DEBUG=* && npm run start",
     "types": "typescript-json-schema \"src/interfaces/*.ts\" \"*\" -o src/types.json --id \"types\" --required"
@@ -53,7 +52,7 @@
     "reflect-metadata": "^0.1.13",
     "sqlite3": "^5.0.8",
     "stats-map": "^1.0.0",
-    "ts-node": "^10.4.0",
+    "ts-node": "^10.8.1",
     "typescript": "4.5.4",
     "typescript-json-schema": "^0.52.0",
     "winston": "^3.6.0"
