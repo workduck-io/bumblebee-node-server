@@ -49,7 +49,6 @@ class SlackController {
 
       for await (const message of messages) {
         if (this.excludeMessageSubtypes.includes(message.subtype)) continue;
-        const text = message.text;
 
         const userId = message.user;
 
@@ -73,10 +72,7 @@ class SlackController {
             ))
           );
 
-        const parsedMessage = await this.parseSlackMessage(
-          message.blocks[0].elements[0].elements
-        );
-
+        const parsedSlackMessage = await this.parseUserMentions(message.text);
         threadMessages.push({
           id: message.client_msg_id,
           provider: Provider.SLACK,
@@ -86,7 +82,7 @@ class SlackController {
             userName: userInfo.name,
             profileImageUrl: userInfo.profile.image_original,
           },
-          text: parsedMessage,
+          text: parsedSlackMessage,
           replies: threadReplies,
           threadURL: `${workspaceInfo.url}archives/${channelId}/p${message.ts
             .split('.')
@@ -107,19 +103,17 @@ class SlackController {
     }
   };
 
-  parseSlackMessage = async (messageElements: any[]): Promise<string> => {
-    let message = '';
+  parseUserMentions = async (message: string): Promise<string> => {
+    const regexExpression = /(?<=<@).+?(?=>)/g;
+    const userIds = message.match(regexExpression);
 
-    for await (const element of messageElements) {
-      if (element.type === 'broadcast') message += `@${element.range}`;
-      else if (element.type === 'user') {
-        const mentionedUserInfo = await this.fetchUserInfo(element.user_id);
-        message += `@${mentionedUserInfo.name}`;
-      } else if (element.type === 'text') message += element.text;
-      else if (element.type === 'emoji') message += `:${element.name}:`;
-      else if (element.type === 'link') message += `${element.url}`;
+    if (!userIds) return message;
+    console.log({ userIds });
+
+    for await (const userId of userIds) {
+      const userInfo = await this.fetchUserInfo(userId);
+      message = message.replace(`<@${userId}>`, `@${userInfo.name}`);
     }
-
     return message;
   };
 
@@ -172,9 +166,7 @@ class SlackController {
     for await (const reply of messageReplies) {
       const replyUserId = reply.user;
       const replyUserInfo = await this.fetchUserInfo(replyUserId);
-      const parsedReply = reply.blocks
-        ? await this.parseSlackMessage(reply.blocks[0].elements[0].elements)
-        : reply.text;
+      const parsedReply = await this.parseUserMentions(reply.text);
 
       threadReplies.push({
         id: reply.client_msg_id,
