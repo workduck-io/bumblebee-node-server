@@ -36,7 +36,10 @@ class TwitterController {
       const tweetDict: Record<string, any> = {};
 
       if (!tweetReplies) {
-        response.status(statusCodes.NO_CONTENT).json([]);
+        response.status(statusCodes.OK).json({
+          provider: Provider.TWITTER,
+          threads: [],
+        });
         return;
       }
       // craft the payload of all userIds from the tweet replies
