@@ -108,7 +108,6 @@ class SlackController {
     const userIds = message.match(regexExpression);
 
     if (!userIds) return message;
-    console.log({ userIds });
 
     for await (const userId of userIds) {
       const userInfo = await this.fetchUserInfo(userId);
