@@ -28,3 +28,22 @@ export async function DiscordTokenValidator(
   else
     res.status(statusCodes.UNAUTHORIZED).send('Discord Bot Auth token missing');
 }
+
+export async function InBuiltTokenValidator(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
+  if (
+    process.env.ADMIN_USERNAME &&
+    process.env.ADMIN_PASSWORD &&
+    process.env.JWT_PRIVATE_KEY
+  )
+    next();
+  else
+    res
+      .status(statusCodes.UNAUTHORIZED)
+      .send(
+        'Missing one or all of this<br> 1) admin username<br> 2) admin password<br> 3) jwt secret key<br>'
+      );
+}

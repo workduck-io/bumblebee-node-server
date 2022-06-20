@@ -1,5 +1,6 @@
 import Auth from '../middlewares/auth';
 import TestimonialController from '../controllers/testimonialcontroller';
+import { InBuiltTokenValidator } from '../middlewares/tokenvalidator';
 
 export const initializeTestimonialRoutes = (
   TestimonialControllerObject: TestimonialController
@@ -7,29 +8,32 @@ export const initializeTestimonialRoutes = (
   const urlPath = '/testimonial';
   TestimonialControllerObject.router.post(
     `${urlPath}/create`,
-    [Auth],
+    [InBuiltTokenValidator, Auth],
     TestimonialControllerObject.createTestimonial
   );
   TestimonialControllerObject.router.put(
     `${urlPath}/update`,
-    [Auth],
+    [InBuiltTokenValidator, Auth],
     TestimonialControllerObject.updateTestimonial
   );
   TestimonialControllerObject.router.get(
     `${urlPath}/get`,
+    [InBuiltTokenValidator],
     TestimonialControllerObject.getTestimonial
   );
   TestimonialControllerObject.router.get(
     `${urlPath}/get/all`,
+    [InBuiltTokenValidator],
     TestimonialControllerObject.getAllTestimonials
   );
   TestimonialControllerObject.router.delete(
     `${urlPath}/delete`,
-    [Auth],
+    [InBuiltTokenValidator],
     TestimonialControllerObject.deleteTestimonial
   );
   TestimonialControllerObject.router.post(
     `${urlPath}/login`,
+    [InBuiltTokenValidator],
     TestimonialControllerObject.login
   );
 };

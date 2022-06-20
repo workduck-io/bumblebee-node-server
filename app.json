@@ -2,7 +2,7 @@
   "name": "bumblebee-node-server",
   "repository": "https://github.com/workduck-io/bumblebee-node-server",
   "logo": "https://node-js-sample.herokuapp.com/node.png",
-  "keywords": ["node", "express", "twitter"],
+  "keywords": ["node", "express", "twitter", "slack", "discord"],
   "env": {
     "TWITTER_BEARER_TOKEN": {
       "description": "A secret key for authorizing the twitter API",
@@ -12,6 +12,26 @@
     "SLACK_BEARER_TOKEN": {
       "description": "A secret key for authorizing the slack API",
       "value ": "enter your slack bearer token here",
+      "required": false
+    },
+    "DISCORD_BEARER_TOKEN": {
+      "description": "A secret key for authorizing the discord API",
+      "value ": "enter your discord bearer token here",
+      "required": false
+    },
+    "ADMIN_USERNAME": {
+      "description": "A username for admin",
+      "value ": "enter your admin username",
+      "required": false
+    },
+    "ADMIN_PASSWORD": {
+      "description": "A password for admin user",
+      "value ": "enter your password for admin user",
+      "required": false
+    },
+    "JWT_PRIVATE_KEY": {
+      "description": "A jwt private key for jwt tokenizer",
+      "value ": "enter your jwt private key for admin user",
       "required": false
     }
   }
