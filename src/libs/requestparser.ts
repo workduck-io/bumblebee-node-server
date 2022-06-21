@@ -1,5 +1,5 @@
 import { injectable } from 'inversify';
-import Interfaces from '../Interfaces';
+import Interfaces from '../interfaces';
 import { schemaValidator } from './schemavalidator';
 
 @injectable()
