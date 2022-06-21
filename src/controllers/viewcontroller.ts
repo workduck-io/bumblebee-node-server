@@ -18,7 +18,7 @@ class ViewController {
   createTestimonial = (request: Request, response: Response): void => {
     try {
       response.sendFile(
-        path.join(__dirname, '../views/CreateTestimonial.html')
+        path.join(__dirname, '../../views/CreateTestimonial.html')
       );
     } catch (error) {
       response
@@ -35,7 +35,7 @@ class ViewController {
       const testimonials = await this._testimonialRepository.getAll();
 
       response.render(
-        path.join(__dirname, '../views/ListTestimonials.mustache'),
+        path.join(__dirname, '../../views/ListTestimonials.mustache'),
         {
           testimonials,
         }
@@ -58,7 +58,7 @@ class ViewController {
       );
 
       response.render(
-        path.join(__dirname, '../views/EditTestimonial.mustache'),
+        path.join(__dirname, '../../views/EditTestimonial.mustache'),
         {
           testimonial,
         }
@@ -71,7 +71,7 @@ class ViewController {
   };
   login = async (request: Request, response: Response): Promise<void> => {
     try {
-      response.sendFile(path.join(__dirname, '../views/Login.html'));
+      response.sendFile(path.join(__dirname, '../../views/Login.html'));
     } catch (error) {
       response
         .status(statusCodes.INTERNAL_SERVER_ERROR)
