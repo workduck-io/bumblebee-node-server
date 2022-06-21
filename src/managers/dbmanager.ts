@@ -7,7 +7,7 @@ import logger from '../libs/logger';
 @injectable()
 export class DBManager {
   private _db;
-  private _dbPath = path.join(__dirname, '../db/testimonials.sqlite3');
+  private _dbPath = path.join(__dirname, '../testimonials.sqlite3');
   constructor() {
     this._db = new sqlite3.Database(this._dbPath, err => {
       if (err) {
